@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
-import { ScreenScrollView } from "@/components/ScreenScrollView";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfileSetupScreen() {
   const [step, setStep] = useState(1);
@@ -20,6 +20,7 @@ export default function ProfileSetupScreen() {
 
   const { updateProfile } = useAuth();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const handleNext = () => {
     if (step < 6) {
@@ -253,7 +254,10 @@ export default function ProfileSetupScreen() {
       colors={[Colors.dark.backgroundRoot, Colors.dark.backgroundDefault]}
       style={styles.container}
     >
-      <ScreenScrollView contentContainerStyle={styles.content}>
+      <ScrollView 
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + Spacing.xl, paddingBottom: insets.bottom + Spacing.xl }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.header}>
           <ThemedText style={styles.title}>Configure seu Perfil</ThemedText>
           <ThemedText style={styles.subtitle}>Passo {step} de 6</ThemedText>
@@ -299,7 +303,7 @@ export default function ProfileSetupScreen() {
             </LinearGradient>
           </Pressable>
         </View>
-      </ScreenScrollView>
+      </ScrollView>
     </LinearGradient>
   );
 }

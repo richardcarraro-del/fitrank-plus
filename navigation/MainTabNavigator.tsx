@@ -9,7 +9,9 @@ import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import WorkoutStackNavigator from "@/navigation/WorkoutStackNavigator";
 import RankingStackNavigator from "@/navigation/RankingStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/hooks/useAuth";
 import { Spacing } from "@/constants/theme";
+import { generateWorkout } from "@/utils/workoutGenerator";
 
 export type MainTabParamList = {
   HomeTab: undefined;
@@ -23,6 +25,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export default function MainTabNavigator() {
   const { theme, isDark } = useTheme();
+  const { user } = useAuth();
 
   return (
     <Tab.Navigator
@@ -102,7 +105,12 @@ export default function MainTabNavigator() {
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate("StartWorkoutModal" as any);
+            if (!user) return;
+            const exercises = generateWorkout(user);
+            navigation.navigate("StartWorkoutModal" as any, {
+              exercises,
+              isNewWorkout: true,
+            });
           },
         })}
       />

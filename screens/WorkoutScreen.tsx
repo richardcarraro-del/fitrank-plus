@@ -58,15 +58,16 @@ export default function WorkoutScreen() {
       return;
     }
 
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     const exercises = generateWorkout(user);
-    console.log("[WorkoutScreen] Generated exercises before navigation:", exercises.length, exercises);
     
-    navigation.navigate("StartWorkoutModal", {
+    navigation.navigate("StartWorkoutModal" as never, {
       exercises,
       isNewWorkout: true,
-    });
+    } as never);
   };
 
   return (

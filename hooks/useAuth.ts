@@ -67,12 +67,13 @@ export function useAuthState(): AuthContextType {
         const onboardingComplete = await AsyncStorage.getItem(onboardingKey);
         
         if (userData) {
-          setUser(JSON.parse(userData));
+          const parsedUser = JSON.parse(userData);
+          setUser(parsedUser);
         }
         setHasCompletedOnboardingState(onboardingComplete === "true");
       }
     } catch (error) {
-      console.error("Error loading user:", error);
+      console.error("[useAuth] Error loading user:", error);
     } finally {
       setIsLoading(false);
     }

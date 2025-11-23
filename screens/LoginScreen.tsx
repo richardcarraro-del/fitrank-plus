@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { View, StyleSheet, Pressable, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Pressable, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { ScreenKeyboardAwareScrollView } from "@/components/ScreenKeyboardAwareScrollView";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -18,6 +18,7 @@ export default function LoginScreen() {
 
   const { login, signup, user } = useAuth();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -71,8 +72,15 @@ export default function LoginScreen() {
       colors={[Colors.dark.backgroundRoot, Colors.dark.backgroundDefault]}
       style={styles.container}
     >
-      <ScreenKeyboardAwareScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingTop: insets.top + Spacing.xl, paddingBottom: insets.bottom + Spacing.xl }]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
           <Image
             source={require("@/assets/images/icon.png")}
             style={styles.logo}
@@ -164,7 +172,8 @@ export default function LoginScreen() {
             </ThemedText>
           </Pressable>
         </View>
-      </ScreenKeyboardAwareScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }

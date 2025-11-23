@@ -8,6 +8,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
+import { generateWorkout } from "@/utils/workoutGenerator";
 
 type HomeStats = Pick<UserStats, 'currentStreak' | 'totalWorkouts' | 'totalPoints' | 'weeklyPoints'>;
 
@@ -49,7 +50,14 @@ export default function HomeScreen() {
   );
 
   const handleStartWorkout = () => {
-    navigation.navigate("StartWorkoutModal" as never);
+    if (!user) {
+      return;
+    }
+    const exercises = generateWorkout(user);
+    navigation.navigate("StartWorkoutModal" as never, {
+      exercises,
+      isNewWorkout: true,
+    } as never);
   };
 
   const handleViewWorkouts = () => {
