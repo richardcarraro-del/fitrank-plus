@@ -7,12 +7,14 @@ import { storage, Workout } from "@/utils/storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import type { NavigationProp } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { generateWorkout } from "@/utils/workoutGenerator";
+import type { RootStackParamList } from "@/navigation/RootNavigator";
 
 export default function WorkoutScreen() {
   const { user } = useAuth();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [canGenerate, setCanGenerate] = useState(true);
   const [remaining, setRemaining] = useState(2);
@@ -57,8 +59,9 @@ export default function WorkoutScreen() {
     if (!user) return;
 
     const exercises = generateWorkout(user);
+    console.log("[WorkoutScreen] Generated exercises before navigation:", exercises.length, exercises);
     
-    navigation.navigate("StartWorkoutModal" as never, {
+    navigation.navigate("StartWorkoutModal", {
       exercises,
       isNewWorkout: true,
     });

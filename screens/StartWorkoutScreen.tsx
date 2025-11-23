@@ -22,9 +22,12 @@ export default function StartWorkoutScreen() {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
+    console.log("[StartWorkoutScreen] Received params:", params);
+    console.log("[StartWorkoutScreen] Exercises from params:", params?.exercises?.length, params?.exercises);
     if (params?.exercises) {
       setExercises(params.exercises);
     } else if (user) {
+      console.log("[StartWorkoutScreen] No exercises in params, generating new workout");
       const generatedExercises = generateWorkout(user);
       setExercises(generatedExercises);
     }

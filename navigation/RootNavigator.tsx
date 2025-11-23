@@ -4,13 +4,14 @@ import OnboardingScreen from "@/screens/OnboardingScreen";
 import LoginScreen from "@/screens/LoginScreen";
 import ProfileSetupScreen from "@/screens/ProfileSetupScreen";
 import StartWorkoutScreen from "@/screens/StartWorkoutScreen";
+import { Exercise } from "@/utils/storage";
 
 export type RootStackParamList = {
   Main: undefined;
   OnboardingModal: undefined;
   LoginModal: undefined;
   ProfileSetupModal: undefined;
-  StartWorkoutModal: undefined;
+  StartWorkoutModal: { exercises: Exercise[]; isNewWorkout: boolean };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
