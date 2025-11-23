@@ -233,14 +233,40 @@ const workoutPlans: WorkoutPlan[] = [
   },
 ];
 
+export function selectPlanBasedOnFrequency(
+  weeklyFrequency: 2 | 3 | 4 | 5 | 6,
+  goal: "hypertrophy" | "weight_loss" | "endurance" | "beginner"
+): "ABC" | "ABCD" | "FullBody" | "UpperLower" {
+  switch (weeklyFrequency) {
+    case 2:
+      return "FullBody";
+    case 3:
+      return "ABC";
+    case 4:
+      if (goal === "hypertrophy" || goal === "beginner") {
+        return "ABCD";
+      }
+      return "UpperLower";
+    case 5:
+      return "ABCD";
+    case 6:
+      return "UpperLower";
+    default:
+      return "FullBody";
+  }
+}
+
 export function generateWorkout(user: User): Exercise[] {
-  const fullBodyWorkout = workoutPlans.find(plan => plan.type === 'FullBody');
+  const selectedPlanType = selectPlanBasedOnFrequency(user.weeklyFrequency, user.goal);
   
-  if (!fullBodyWorkout || !fullBodyWorkout.workouts[0]) {
+  const selectedWorkoutPlan = workoutPlans.find(plan => plan.type === selectedPlanType);
+  
+  if (!selectedWorkoutPlan || !selectedWorkoutPlan.workouts[0]) {
     return [];
   }
 
-  const gymExercises = fullBodyWorkout.workouts[0].exercises;
+  const firstWorkout = selectedWorkoutPlan.workouts[0];
+  const gymExercises = firstWorkout.exercises;
   
   return gymExercises.map((ex, idx) => ({
     id: `${Date.now()}-${idx}`,

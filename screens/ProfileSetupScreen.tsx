@@ -9,13 +9,13 @@ import { ScreenScrollView } from "@/components/ScreenScrollView";
 
 export default function ProfileSetupScreen() {
   const [step, setStep] = useState(1);
-  const [goal, setGoal] = useState<"muscle" | "lose_weight" | "endurance" | "health">("muscle");
+  const [goal, setGoal] = useState<"hypertrophy" | "weight_loss" | "endurance" | "beginner">("hypertrophy");
   const [level, setLevel] = useState<"beginner" | "intermediate" | "advanced">("beginner");
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [timeAvailable, setTimeAvailable] = useState(30);
-  const [weeklyFrequency, setWeeklyFrequency] = useState(3);
+  const [weeklyFrequency, setWeeklyFrequency] = useState<2 | 3 | 4 | 5 | 6>(3);
   const [location, setLocation] = useState<"home" | "gym">("gym");
 
   const { updateProfile } = useAuth();
@@ -36,6 +36,8 @@ export default function ProfileSetupScreen() {
   };
 
   const handleFinish = async () => {
+    const selectedPlan = selectPlan(weeklyFrequency, goal);
+    
     await updateProfile({
       goal,
       level,
@@ -45,8 +47,32 @@ export default function ProfileSetupScreen() {
       timeAvailable,
       weeklyFrequency,
       location,
+      selectedPlan,
     });
     navigation.navigate("Main" as never);
+  };
+
+  const selectPlan = (
+    frequency: 2 | 3 | 4 | 5 | 6,
+    userGoal: "hypertrophy" | "weight_loss" | "endurance" | "beginner"
+  ): "ABC" | "ABCD" | "FullBody" | "UpperLower" => {
+    switch (frequency) {
+      case 2:
+        return "FullBody";
+      case 3:
+        return "ABC";
+      case 4:
+        if (userGoal === "hypertrophy" || userGoal === "beginner") {
+          return "ABCD";
+        }
+        return "UpperLower";
+      case 5:
+        return "ABCD";
+      case 6:
+        return "UpperLower";
+      default:
+        return "FullBody";
+    }
   };
 
   const renderStep = () => {
@@ -57,14 +83,14 @@ export default function ProfileSetupScreen() {
             <ThemedText style={styles.stepTitle}>Qual é seu objetivo?</ThemedText>
             <View style={styles.optionsContainer}>
               <OptionButton
-                label="Ganhar Massa"
-                selected={goal === "muscle"}
-                onPress={() => setGoal("muscle")}
+                label="Hipertrofia"
+                selected={goal === "hypertrophy"}
+                onPress={() => setGoal("hypertrophy")}
               />
               <OptionButton
-                label="Emagrecer"
-                selected={goal === "lose_weight"}
-                onPress={() => setGoal("lose_weight")}
+                label="Emagrecimento"
+                selected={goal === "weight_loss"}
+                onPress={() => setGoal("weight_loss")}
               />
               <OptionButton
                 label="Resistência"
@@ -72,9 +98,9 @@ export default function ProfileSetupScreen() {
                 onPress={() => setGoal("endurance")}
               />
               <OptionButton
-                label="Saúde"
-                selected={goal === "health"}
-                onPress={() => setGoal("health")}
+                label="Iniciante"
+                selected={goal === "beginner"}
+                onPress={() => setGoal("beginner")}
               />
             </View>
           </View>
@@ -171,6 +197,11 @@ export default function ProfileSetupScreen() {
           <View style={styles.stepContainer}>
             <ThemedText style={styles.stepTitle}>Frequência semanal</ThemedText>
             <View style={styles.optionsContainer}>
+              <OptionButton
+                label="2x por semana"
+                selected={weeklyFrequency === 2}
+                onPress={() => setWeeklyFrequency(2)}
+              />
               <OptionButton
                 label="3x por semana"
                 selected={weeklyFrequency === 3}

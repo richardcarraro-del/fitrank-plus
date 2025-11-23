@@ -9,17 +9,19 @@ export type User = {
   age: number;
   weight: number;
   height: number;
-  goal: "muscle" | "lose_weight" | "endurance" | "health";
+  goal: "hypertrophy" | "weight_loss" | "endurance" | "beginner";
   level: "beginner" | "intermediate" | "advanced";
   timeAvailable: number;
-  weeklyFrequency: number;
+  weeklyFrequency: 2 | 3 | 4 | 5 | 6;
   location: "home" | "gym";
   equipment: string[];
   academy?: {
     id: string;
     name: string;
+    address?: string;
   };
   isPremium: boolean;
+  selectedPlan?: "ABC" | "ABCD" | "FullBody" | "UpperLower";
 };
 
 type AuthContextType = {
@@ -77,7 +79,7 @@ export function useAuthState(): AuthContextType {
       age: 25,
       weight: 70,
       height: 175,
-      goal: "muscle",
+      goal: "hypertrophy",
       level: "intermediate",
       timeAvailable: 60,
       weeklyFrequency: 4,
@@ -86,8 +88,10 @@ export function useAuthState(): AuthContextType {
       academy: {
         id: "1",
         name: "SmartFit Centro",
+        address: "Av. Paulista, 1000",
       },
       isPremium: false,
+      selectedPlan: "ABCD",
     };
     await AsyncStorage.setItem("@user", JSON.stringify(mockUser));
     setUser(mockUser);
@@ -102,7 +106,7 @@ export function useAuthState(): AuthContextType {
       age: 0,
       weight: 0,
       height: 0,
-      goal: "muscle",
+      goal: "beginner",
       level: "beginner",
       timeAvailable: 30,
       weeklyFrequency: 3,

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { StyleSheet, View, Alert, Pressable, Modal, FlatList } from "react-native";
+import { StyleSheet, View, Alert, Pressable, Modal, FlatList, ScrollView } from "react-native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,6 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { storage, UserStats, Academy, Achievement } from "@/utils/storage";
+import { selectPlanBasedOnFrequency } from "@/utils/workoutGenerator";
 
 export default function ProfileScreen() {
   const { user, logout, updateProfile } = useAuth();
@@ -16,6 +17,8 @@ export default function ProfileScreen() {
   const [academies, setAcademies] = useState<Academy[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [showAcademyModal, setShowAcademyModal] = useState(false);
+  const [showGoalModal, setShowGoalModal] = useState(false);
+  const [showFrequencyModal, setShowFrequencyModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -87,6 +90,42 @@ export default function ProfileScreen() {
     await loadData();
     setShowAcademyModal(false);
     Alert.alert("Academia atualizada", `Agora você faz parte de ${academy.name}!`);
+  };
+
+  const handleUpdateGoal = async (newGoal: "hypertrophy" | "weight_loss" | "endurance" | "beginner") => {
+    if (!user) return;
+    
+    const newPlan = selectPlanBasedOnFrequency(user.weeklyFrequency, newGoal);
+    await updateProfile({ goal: newGoal, selectedPlan: newPlan });
+    await loadData();
+    setShowGoalModal(false);
+    Alert.alert(
+      "Objetivo atualizado",
+      `Seu plano de treino foi atualizado para ${newPlan}!`
+    );
+  };
+
+  const handleUpdateFrequency = async (newFrequency: 2 | 3 | 4 | 5 | 6) => {
+    if (!user) return;
+    
+    const newPlan = selectPlanBasedOnFrequency(newFrequency, user.goal);
+    await updateProfile({ weeklyFrequency: newFrequency, selectedPlan: newPlan });
+    await loadData();
+    setShowFrequencyModal(false);
+    Alert.alert(
+      "Frequência atualizada",
+      `Seu plano de treino foi atualizado para ${newPlan}!`
+    );
+  };
+
+  const getGoalLabel = (goal: "hypertrophy" | "weight_loss" | "endurance" | "beginner") => {
+    const labels = {
+      hypertrophy: "Hipertrofia",
+      weight_loss: "Emagrecimento",
+      endurance: "Resistência",
+      beginner: "Iniciante",
+    };
+    return labels[goal];
   };
 
   if (!user) {
@@ -236,6 +275,58 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
+        <ThemedText style={styles.sectionTitle}>Preferências de Treino</ThemedText>
+        <View style={styles.trainingPreferences}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.preferenceCard,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={() => setShowGoalModal(true)}
+          >
+            <View style={styles.preferenceInfo}>
+              <Feather name="target" size={20} color={Colors.dark.primary} />
+              <View style={{ flex: 1 }}>
+                <ThemedText style={styles.preferenceLabel}>Objetivo</ThemedText>
+                <ThemedText style={styles.preferenceValue}>
+                  {getGoalLabel(user.goal)}
+                </ThemedText>
+              </View>
+            </View>
+            <Feather name="chevron-right" size={20} color={Colors.dark.textTertiary} />
+          </Pressable>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.preferenceCard,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={() => setShowFrequencyModal(true)}
+          >
+            <View style={styles.preferenceInfo}>
+              <Feather name="calendar" size={20} color={Colors.dark.primary} />
+              <View style={{ flex: 1 }}>
+                <ThemedText style={styles.preferenceLabel}>Frequência Semanal</ThemedText>
+                <ThemedText style={styles.preferenceValue}>
+                  {user.weeklyFrequency}x por semana
+                </ThemedText>
+              </View>
+            </View>
+            <Feather name="chevron-right" size={20} color={Colors.dark.textTertiary} />
+          </Pressable>
+
+          {user.selectedPlan && (
+            <View style={styles.planBadge}>
+              <Feather name="layers" size={16} color={Colors.dark.success} />
+              <ThemedText style={styles.planBadgeText}>
+                Plano: {user.selectedPlan}
+              </ThemedText>
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.section}>
         <ThemedText style={styles.sectionTitle}>Configurações</ThemedText>
         <View style={styles.settingsList}>
           <SettingItem icon="user" label="Editar Perfil" onPress={() => {}} />
@@ -290,6 +381,82 @@ export default function ProfileScreen() {
                 </Pressable>
               )}
             />
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showGoalModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowGoalModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>Selecionar Objetivo</ThemedText>
+              <Pressable onPress={() => setShowGoalModal(false)}>
+                <Feather name="x" size={24} color={Colors.dark.text} />
+              </Pressable>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              {(["hypertrophy", "weight_loss", "endurance", "beginner"] as const).map((goal) => (
+                <Pressable
+                  key={goal}
+                  style={({ pressed }) => [
+                    styles.optionItem,
+                    pressed && styles.buttonPressed,
+                    user.goal === goal && styles.optionItemSelected,
+                  ]}
+                  onPress={() => handleUpdateGoal(goal)}
+                >
+                  <ThemedText style={styles.optionItemText}>
+                    {getGoalLabel(goal)}
+                  </ThemedText>
+                  {user.goal === goal && (
+                    <Feather name="check" size={20} color={Colors.dark.success} />
+                  )}
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showFrequencyModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowFrequencyModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>Frequência Semanal</ThemedText>
+              <Pressable onPress={() => setShowFrequencyModal(false)}>
+                <Feather name="x" size={24} color={Colors.dark.text} />
+              </Pressable>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              {([2, 3, 4, 5, 6] as const).map((freq) => (
+                <Pressable
+                  key={freq}
+                  style={({ pressed }) => [
+                    styles.optionItem,
+                    pressed && styles.buttonPressed,
+                    user.weeklyFrequency === freq && styles.optionItemSelected,
+                  ]}
+                  onPress={() => handleUpdateFrequency(freq)}
+                >
+                  <ThemedText style={styles.optionItemText}>
+                    {freq}x por semana
+                  </ThemedText>
+                  {user.weeklyFrequency === freq && (
+                    <Feather name="check" size={20} color={Colors.dark.success} />
+                  )}
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -579,5 +746,67 @@ const styles = StyleSheet.create({
     ...Typography.caption,
     color: Colors.dark.textSecondary,
     textAlign: "center",
+  },
+  trainingPreferences: {
+    gap: Spacing.md,
+  },
+  preferenceCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: Colors.dark.backgroundDefault,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
+  },
+  preferenceInfo: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+  },
+  preferenceLabel: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+    marginBottom: 4,
+  },
+  preferenceValue: {
+    ...Typography.bodyLarge,
+    fontWeight: "600",
+  },
+  planBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.sm,
+    borderWidth: 1,
+    borderColor: Colors.dark.success,
+  },
+  planBadgeText: {
+    ...Typography.caption,
+    fontWeight: "600",
+    color: Colors.dark.success,
+  },
+  modalScroll: {
+    paddingHorizontal: Spacing.lg,
+  },
+  optionItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.dark.border,
+  },
+  optionItemSelected: {
+    backgroundColor: Colors.dark.backgroundSecondary,
+  },
+  optionItemText: {
+    ...Typography.bodyLarge,
+    fontWeight: "500",
   },
 });
