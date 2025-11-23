@@ -99,7 +99,8 @@ export default function ProfileScreen() {
   const handleUpdateGoal = async (newGoal: "hypertrophy" | "weight_loss" | "endurance" | "beginner") => {
     if (!user) return;
     
-    const newPlan = selectPlanBasedOnFrequency(user.weeklyFrequency, newGoal);
+    const currentFrequency = user.weeklyFrequency || 3;
+    const newPlan = selectPlanBasedOnFrequency(currentFrequency, newGoal);
     await updateProfile({ goal: newGoal, selectedPlan: newPlan });
     await loadData();
     setShowGoalModal(false);
@@ -112,7 +113,8 @@ export default function ProfileScreen() {
   const handleUpdateFrequency = async (newFrequency: 2 | 3 | 4 | 5 | 6) => {
     if (!user) return;
     
-    const newPlan = selectPlanBasedOnFrequency(newFrequency, user.goal);
+    const currentGoal = user.goal || 'beginner';
+    const newPlan = selectPlanBasedOnFrequency(newFrequency, currentGoal);
     await updateProfile({ weeklyFrequency: newFrequency, selectedPlan: newPlan });
     await loadData();
     setShowFrequencyModal(false);

@@ -257,7 +257,10 @@ export function selectPlanBasedOnFrequency(
 }
 
 export function generateWorkout(user: User): Exercise[] {
-  const selectedPlanType = selectPlanBasedOnFrequency(user.weeklyFrequency, user.goal);
+  const weeklyFrequency = user.weeklyFrequency || 3;
+  const goal = user.goal || 'beginner';
+  
+  const selectedPlanType = selectPlanBasedOnFrequency(weeklyFrequency, goal);
   
   const selectedWorkoutPlan = workoutPlans.find(plan => plan.type === selectedPlanType);
   

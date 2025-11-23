@@ -156,7 +156,7 @@ export default function HomeScreen() {
         <View style={styles.quickStats}>
           <QuickStat icon="activity" label="Treinos" value={stats.totalWorkouts.toString()} />
           <QuickStat icon="zap" label="Pontos" value={stats.totalPoints.toString()} />
-          <QuickStat icon="flame" label="Sequência" value={`${stats.currentStreak}`} />
+          <QuickStat icon="trending-up" label="Sequência" value={`${stats.currentStreak}`} />
         </View>
       </View>
 
