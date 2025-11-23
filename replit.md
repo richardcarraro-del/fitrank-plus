@@ -136,6 +136,35 @@ Preferred communication style: Simple, everyday language.
 - Custom ErrorFallback component with dev-mode error details modal
 - App restart capability via expo's reloadAppAsync
 
+## Recent Changes
+
+### November 2025 - Critical Bug Fixes & Authentication Flow
+
+**Authentication Gating (RootNavigator)**
+- Implemented user authentication verification in RootNavigator
+- App now shows LoginModal when no user exists, Main after authentication
+- Added loading state during initial user data fetch to prevent flash
+
+**Modal Screen Crashes Fixed**
+- Fixed LoginScreen crash: replaced ScreenKeyboardAwareScrollView with ScrollView + KeyboardAvoidingView + useSafeAreaInsets
+- Fixed ProfileSetupScreen crash: replaced ScreenScrollView with standard ScrollView + safe area insets
+- Both screens now work correctly when shown as modals outside TabNavigator context
+- Root cause: ScreenScrollView and ScreenKeyboardAwareScrollView depend on useBottomTabBarHeight which only works inside TabNavigator
+
+**Workout Generation Improvements**
+- Added default values (weeklyFrequency=3, goal='beginner') to generateWorkout function to prevent crashes on undefined user fields
+- Added same defaults in ProfileScreen update handlers
+- All navigation entry points (HomeScreen, WorkoutScreen, MainTabNavigator FAB) now call generateWorkout before navigating to StartWorkoutModal
+
+**UI/UX Fixes**
+- Replaced invalid "flame" icon with "trending-up" in HomeScreen streak card
+- Removed all debug console.log statements (kept console.error for production error logging)
+- Verified complete signup → profile setup → main → start workout flow works end-to-end
+
+**Color Palette**
+- Changed app color scheme from orange (#FF6B35) to green (#4CAF50) throughout entire application
+- Updated gradients, buttons, badges, and accent colors to use green tones
+
 ## External Dependencies
 
 ### Core Framework Dependencies
