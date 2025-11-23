@@ -1,179 +1,269 @@
 import { Exercise } from "./storage";
 import { User } from "@/hooks/useAuth";
 
-const exerciseDatabase = {
-  beginner: {
-    muscle: [
-      { name: "Supino reto", sets: 3, reps: 12, rest: 60 },
-      { name: "Agachamento livre", sets: 3, reps: 15, rest: 60 },
-      { name: "Rosca direta", sets: 3, reps: 12, rest: 45 },
-      { name: "Tríceps testa", sets: 3, reps: 12, rest: 45 },
-      { name: "Desenvolvimento", sets: 3, reps: 12, rest: 60 },
-      { name: "Remada baixa", sets: 3, reps: 12, rest: 60 },
-      { name: "Leg press", sets: 3, reps: 15, rest: 60 },
-      { name: "Panturrilha em pé", sets: 3, reps: 20, rest: 30 },
-    ],
-    lose_weight: [
-      { name: "Burpees", sets: 3, reps: 10, rest: 30 },
-      { name: "Jump squats", sets: 3, reps: 15, rest: 30 },
-      { name: "Mountain climbers", sets: 3, reps: 20, rest: 30 },
-      { name: "Prancha", sets: 3, reps: 30, rest: 30 },
-      { name: "Polichinelos", sets: 3, reps: 30, rest: 30 },
-      { name: "Corrida estacionária", sets: 3, reps: 60, rest: 30 },
-    ],
-    endurance: [
-      { name: "Flexões", sets: 3, reps: 15, rest: 30 },
-      { name: "Agachamento", sets: 3, reps: 20, rest: 30 },
-      { name: "Prancha", sets: 3, reps: 45, rest: 30 },
-      { name: "Afundo", sets: 3, reps: 12, rest: 30 },
-      { name: "Abdominal", sets: 3, reps: 20, rest: 30 },
-    ],
-    health: [
-      { name: "Caminhada rápida", sets: 1, reps: 20, rest: 0 },
-      { name: "Alongamento geral", sets: 1, reps: 10, rest: 0 },
-      { name: "Agachamento", sets: 2, reps: 15, rest: 45 },
-      { name: "Prancha", sets: 2, reps: 30, rest: 45 },
-      { name: "Flexões inclinadas", sets: 2, reps: 10, rest: 45 },
-    ],
-  },
-  intermediate: {
-    muscle: [
-      { name: "Supino inclinado", sets: 4, reps: 10, rest: 75 },
-      { name: "Agachamento profundo", sets: 4, reps: 12, rest: 90 },
-      { name: "Rosca alternada", sets: 4, reps: 10, rest: 60 },
-      { name: "Tríceps francês", sets: 4, reps: 10, rest: 60 },
-      { name: "Desenvolvimento Arnold", sets: 4, reps: 10, rest: 75 },
-      { name: "Puxada frente", sets: 4, reps: 10, rest: 75 },
-      { name: "Levantamento terra", sets: 4, reps: 8, rest: 90 },
-      { name: "Stiff", sets: 4, reps: 12, rest: 75 },
-    ],
-    lose_weight: [
-      { name: "Burpees avançado", sets: 4, reps: 12, rest: 30 },
-      { name: "Box jump", sets: 4, reps: 12, rest: 30 },
-      { name: "Kettlebell swing", sets: 4, reps: 15, rest: 30 },
-      { name: "Battle rope", sets: 4, reps: 30, rest: 30 },
-      { name: "Sprints", sets: 6, reps: 30, rest: 60 },
-    ],
-    endurance: [
-      { name: "Flexões diamante", sets: 4, reps: 15, rest: 30 },
-      { name: "Agachamento búlgaro", sets: 4, reps: 12, rest: 30 },
-      { name: "Prancha lateral", sets: 4, reps: 45, rest: 30 },
-      { name: "Jump lunges", sets: 4, reps: 20, rest: 30 },
-      { name: "V-ups", sets: 4, reps: 15, rest: 30 },
-    ],
-    health: [
-      { name: "Caminhada intervalada", sets: 1, reps: 30, rest: 0 },
-      { name: "Yoga flow", sets: 1, reps: 15, rest: 0 },
-      { name: "Agachamento goblet", sets: 3, reps: 15, rest: 60 },
-      { name: "Prancha com movimento", sets: 3, reps: 40, rest: 60 },
-      { name: "Flexões", sets: 3, reps: 12, rest: 60 },
-    ],
-  },
-  advanced: {
-    muscle: [
-      { name: "Supino declinado", sets: 5, reps: 8, rest: 90 },
-      { name: "Agachamento frontal", sets: 5, reps: 8, rest: 120 },
-      { name: "Rosca martelo", sets: 5, reps: 8, rest: 75 },
-      { name: "Tríceps corda", sets: 5, reps: 12, rest: 60 },
-      { name: "Militar com barra", sets: 5, reps: 8, rest: 90 },
-      { name: "Remada curvada", sets: 5, reps: 8, rest: 90 },
-      { name: "Levantamento terra sumo", sets: 5, reps: 6, rest: 120 },
-      { name: "Leg curl", sets: 5, reps: 10, rest: 75 },
-    ],
-    lose_weight: [
-      { name: "Burpees com salto", sets: 5, reps: 15, rest: 30 },
-      { name: "Thruster", sets: 5, reps: 15, rest: 45 },
-      { name: "Clean and press", sets: 5, reps: 12, rest: 45 },
-      { name: "Rowing machine", sets: 5, reps: 60, rest: 60 },
-      { name: "Assault bike", sets: 6, reps: 45, rest: 60 },
-    ],
-    endurance: [
-      { name: "Muscle-ups", sets: 5, reps: 8, rest: 60 },
-      { name: "Pistol squats", sets: 5, reps: 10, rest: 45 },
-      { name: "Prancha RKC", sets: 5, reps: 60, rest: 45 },
-      { name: "Handstand push-ups", sets: 5, reps: 8, rest: 60 },
-      { name: "Dragon flag", sets: 5, reps: 8, rest: 60 },
-    ],
-    health: [
-      { name: "Corrida moderada", sets: 1, reps: 40, rest: 0 },
-      { name: "Mobilidade articular", sets: 1, reps: 15, rest: 0 },
-      { name: "Agachamento pistol", sets: 4, reps: 8, rest: 75 },
-      { name: "L-sit", sets: 4, reps: 30, rest: 60 },
-      { name: "Archer push-ups", sets: 4, reps: 10, rest: 75 },
-    ],
-  },
+type MuscleGroup = 'chest' | 'back' | 'legs' | 'shoulders' | 'biceps' | 'triceps' | 'abs';
+
+interface GymExercise {
+  id: string;
+  name: string;
+  muscleGroup: MuscleGroup;
+  sets: number;
+  reps: string;
+  rest: number;
+}
+
+interface WorkoutPlan {
+  name: string;
+  type: 'ABC' | 'ABCD' | 'FullBody' | 'UpperLower';
+  daysPerWeek: number;
+  workouts: {
+    day: string;
+    exercises: GymExercise[];
+  }[];
+}
+
+const gymExerciseDatabase: Record<MuscleGroup, GymExercise[]> = {
+  chest: [
+    { id: 'chest-1', name: 'Supino Reto', muscleGroup: 'chest', sets: 4, reps: '8-12', rest: 90 },
+    { id: 'chest-2', name: 'Supino Inclinado', muscleGroup: 'chest', sets: 4, reps: '8-12', rest: 90 },
+    { id: 'chest-3', name: 'Supino Declinado', muscleGroup: 'chest', sets: 3, reps: '10-12', rest: 75 },
+    { id: 'chest-4', name: 'Crucifixo Reto', muscleGroup: 'chest', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'chest-5', name: 'Crucifixo Inclinado', muscleGroup: 'chest', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'chest-6', name: 'Voador (Peck Deck)', muscleGroup: 'chest', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'chest-7', name: 'Flexão de Braço', muscleGroup: 'chest', sets: 3, reps: '15-20', rest: 45 },
+    { id: 'chest-8', name: 'Cross Over', muscleGroup: 'chest', sets: 3, reps: '12-15', rest: 60 },
+  ],
+  back: [
+    { id: 'back-1', name: 'Remada Curvada', muscleGroup: 'back', sets: 4, reps: '8-12', rest: 90 },
+    { id: 'back-2', name: 'Pulldown Frente', muscleGroup: 'back', sets: 4, reps: '10-12', rest: 75 },
+    { id: 'back-3', name: 'Remada Sentada', muscleGroup: 'back', sets: 4, reps: '10-12', rest: 75 },
+    { id: 'back-4', name: 'Levantamento Terra', muscleGroup: 'back', sets: 4, reps: '6-10', rest: 120 },
+    { id: 'back-5', name: 'Pulley Frente', muscleGroup: 'back', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'back-6', name: 'Remada Unilateral', muscleGroup: 'back', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'back-7', name: 'Barra Fixa', muscleGroup: 'back', sets: 3, reps: '8-12', rest: 90 },
+    { id: 'back-8', name: 'Pulldown Triângulo', muscleGroup: 'back', sets: 3, reps: '10-12', rest: 75 },
+  ],
+  legs: [
+    { id: 'legs-1', name: 'Agachamento Livre', muscleGroup: 'legs', sets: 4, reps: '8-12', rest: 120 },
+    { id: 'legs-2', name: 'Leg Press 45°', muscleGroup: 'legs', sets: 4, reps: '10-15', rest: 90 },
+    { id: 'legs-3', name: 'Cadeira Extensora', muscleGroup: 'legs', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'legs-4', name: 'Cadeira Flexora', muscleGroup: 'legs', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'legs-5', name: 'Stiff', muscleGroup: 'legs', sets: 4, reps: '10-12', rest: 90 },
+    { id: 'legs-6', name: 'Afundo', muscleGroup: 'legs', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'legs-7', name: 'Agachamento Búlgaro', muscleGroup: 'legs', sets: 3, reps: '10-12', rest: 75 },
+    { id: 'legs-8', name: 'Panturrilha em Pé', muscleGroup: 'legs', sets: 4, reps: '15-20', rest: 45 },
+    { id: 'legs-9', name: 'Panturrilha Sentado', muscleGroup: 'legs', sets: 3, reps: '15-20', rest: 45 },
+  ],
+  shoulders: [
+    { id: 'shoulders-1', name: 'Desenvolvimento Barra', muscleGroup: 'shoulders', sets: 4, reps: '8-12', rest: 90 },
+    { id: 'shoulders-2', name: 'Desenvolvimento Halteres', muscleGroup: 'shoulders', sets: 4, reps: '10-12', rest: 90 },
+    { id: 'shoulders-3', name: 'Elevação Lateral', muscleGroup: 'shoulders', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'shoulders-4', name: 'Elevação Frontal', muscleGroup: 'shoulders', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'shoulders-5', name: 'Remada Alta', muscleGroup: 'shoulders', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'shoulders-6', name: 'Crucifixo Inverso', muscleGroup: 'shoulders', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'shoulders-7', name: 'Desenvolvimento Arnold', muscleGroup: 'shoulders', sets: 3, reps: '10-12', rest: 75 },
+  ],
+  biceps: [
+    { id: 'biceps-1', name: 'Rosca Direta', muscleGroup: 'biceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'biceps-2', name: 'Rosca Alternada', muscleGroup: 'biceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'biceps-3', name: 'Rosca Scott', muscleGroup: 'biceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'biceps-4', name: 'Rosca Martelo', muscleGroup: 'biceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'biceps-5', name: 'Rosca Concentrada', muscleGroup: 'biceps', sets: 3, reps: '12-15', rest: 45 },
+    { id: 'biceps-6', name: 'Rosca 21', muscleGroup: 'biceps', sets: 2, reps: '21', rest: 60 },
+  ],
+  triceps: [
+    { id: 'triceps-1', name: 'Tríceps Testa', muscleGroup: 'triceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'triceps-2', name: 'Tríceps Corda', muscleGroup: 'triceps', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'triceps-3', name: 'Tríceps Francês', muscleGroup: 'triceps', sets: 3, reps: '10-12', rest: 60 },
+    { id: 'triceps-4', name: 'Mergulho', muscleGroup: 'triceps', sets: 3, reps: '10-15', rest: 75 },
+    { id: 'triceps-5', name: 'Tríceps Barra', muscleGroup: 'triceps', sets: 3, reps: '12-15', rest: 60 },
+    { id: 'triceps-6', name: 'Tríceps Coice', muscleGroup: 'triceps', sets: 3, reps: '12-15', rest: 45 },
+  ],
+  abs: [
+    { id: 'abs-1', name: 'Abdominal Supra', muscleGroup: 'abs', sets: 3, reps: '15-20', rest: 45 },
+    { id: 'abs-2', name: 'Prancha Isométrica', muscleGroup: 'abs', sets: 3, reps: '30-60s', rest: 45 },
+    { id: 'abs-3', name: 'Elevação de Pernas', muscleGroup: 'abs', sets: 3, reps: '12-15', rest: 45 },
+    { id: 'abs-4', name: 'Abdominal Infra', muscleGroup: 'abs', sets: 3, reps: '15-20', rest: 45 },
+    { id: 'abs-5', name: 'Prancha Lateral', muscleGroup: 'abs', sets: 3, reps: '30-45s', rest: 45 },
+    { id: 'abs-6', name: 'Abdominal Bicicleta', muscleGroup: 'abs', sets: 3, reps: '20-30', rest: 45 },
+    { id: 'abs-7', name: 'Abdominal Oblíquo', muscleGroup: 'abs', sets: 3, reps: '15-20', rest: 45 },
+  ],
 };
 
+const workoutPlans: WorkoutPlan[] = [
+  {
+    name: 'Treino ABC',
+    type: 'ABC',
+    daysPerWeek: 3,
+    workouts: [
+      {
+        day: 'A',
+        exercises: [
+          gymExerciseDatabase.chest[0],
+          gymExerciseDatabase.chest[1],
+          gymExerciseDatabase.chest[3],
+          gymExerciseDatabase.triceps[0],
+          gymExerciseDatabase.triceps[1],
+          gymExerciseDatabase.triceps[3],
+        ],
+      },
+      {
+        day: 'B',
+        exercises: [
+          gymExerciseDatabase.back[0],
+          gymExerciseDatabase.back[1],
+          gymExerciseDatabase.back[2],
+          gymExerciseDatabase.back[6],
+          gymExerciseDatabase.biceps[0],
+          gymExerciseDatabase.biceps[1],
+        ],
+      },
+      {
+        day: 'C',
+        exercises: [
+          gymExerciseDatabase.legs[0],
+          gymExerciseDatabase.legs[1],
+          gymExerciseDatabase.legs[2],
+          gymExerciseDatabase.legs[3],
+          gymExerciseDatabase.shoulders[0],
+          gymExerciseDatabase.shoulders[2],
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Treino ABCD',
+    type: 'ABCD',
+    daysPerWeek: 4,
+    workouts: [
+      {
+        day: 'A',
+        exercises: [
+          gymExerciseDatabase.chest[0],
+          gymExerciseDatabase.chest[1],
+          gymExerciseDatabase.chest[3],
+          gymExerciseDatabase.chest[4],
+          gymExerciseDatabase.chest[5],
+        ],
+      },
+      {
+        day: 'B',
+        exercises: [
+          gymExerciseDatabase.back[0],
+          gymExerciseDatabase.back[1],
+          gymExerciseDatabase.back[3],
+          gymExerciseDatabase.back[2],
+          gymExerciseDatabase.back[6],
+        ],
+      },
+      {
+        day: 'C',
+        exercises: [
+          gymExerciseDatabase.legs[0],
+          gymExerciseDatabase.legs[1],
+          gymExerciseDatabase.legs[2],
+          gymExerciseDatabase.legs[3],
+          gymExerciseDatabase.legs[4],
+        ],
+      },
+      {
+        day: 'D',
+        exercises: [
+          gymExerciseDatabase.shoulders[0],
+          gymExerciseDatabase.shoulders[2],
+          gymExerciseDatabase.shoulders[3],
+          gymExerciseDatabase.biceps[0],
+          gymExerciseDatabase.biceps[2],
+          gymExerciseDatabase.triceps[0],
+          gymExerciseDatabase.triceps[1],
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Treino Full Body',
+    type: 'FullBody',
+    daysPerWeek: 3,
+    workouts: [
+      {
+        day: 'FullBody',
+        exercises: [
+          gymExerciseDatabase.chest[0],
+          gymExerciseDatabase.back[1],
+          gymExerciseDatabase.legs[0],
+          gymExerciseDatabase.shoulders[0],
+          gymExerciseDatabase.biceps[0],
+          gymExerciseDatabase.triceps[0],
+          gymExerciseDatabase.abs[0],
+          gymExerciseDatabase.abs[1],
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Treino Upper/Lower',
+    type: 'UpperLower',
+    daysPerWeek: 4,
+    workouts: [
+      {
+        day: 'Upper',
+        exercises: [
+          gymExerciseDatabase.chest[0],
+          gymExerciseDatabase.chest[1],
+          gymExerciseDatabase.back[0],
+          gymExerciseDatabase.back[1],
+          gymExerciseDatabase.shoulders[0],
+          gymExerciseDatabase.biceps[0],
+          gymExerciseDatabase.triceps[0],
+        ],
+      },
+      {
+        day: 'Lower',
+        exercises: [
+          gymExerciseDatabase.legs[0],
+          gymExerciseDatabase.legs[1],
+          gymExerciseDatabase.legs[2],
+          gymExerciseDatabase.legs[3],
+          gymExerciseDatabase.legs[4],
+          gymExerciseDatabase.abs[0],
+          gymExerciseDatabase.abs[1],
+        ],
+      },
+    ],
+  },
+];
+
 export function generateWorkout(user: User): Exercise[] {
-  const { goal, level, timeAvailable } = user;
+  const fullBodyWorkout = workoutPlans.find(plan => plan.type === 'FullBody');
   
-  const exercises = exerciseDatabase[level][goal] || exerciseDatabase.beginner.health;
-  
-  let exerciseCount = timeAvailable >= 60 ? 6 : timeAvailable >= 45 ? 5 : 4;
-  
-  if (level === "advanced" && timeAvailable >= 60) {
-    exerciseCount = 7;
-  } else if (level === "beginner" && timeAvailable < 30) {
-    exerciseCount = 3;
+  if (!fullBodyWorkout || !fullBodyWorkout.workouts[0]) {
+    return [];
   }
+
+  const gymExercises = fullBodyWorkout.workouts[0].exercises;
   
-  const dayOfWeek = new Date().getDay();
-  const seed = user.name.length + dayOfWeek;
-  
-  const shuffled = [...exercises].sort((a, b) => {
-    const hashA = (a.name.charCodeAt(0) * seed) % 100;
-    const hashB = (b.name.charCodeAt(0) * seed) % 100;
-    return hashA - hashB;
-  });
-  
-  let selectedExercises = shuffled.slice(0, Math.min(exerciseCount, exercises.length));
-  
-  if (goal === "muscle" && selectedExercises.length > 1) {
-    const firstExercise = selectedExercises[0];
-    selectedExercises = selectedExercises.slice(1);
-    selectedExercises.push(firstExercise);
-  }
-  
-  selectedExercises = selectedExercises.map((ex) => {
-    const adjustedExercise = { ...ex };
-    
-    if (level === "beginner") {
-      adjustedExercise.sets = Math.max(2, ex.sets - 1);
-      adjustedExercise.reps = Math.max(8, ex.reps - 2);
-      adjustedExercise.rest = ex.rest + 15;
-    } else if (level === "advanced") {
-      adjustedExercise.sets = ex.sets + 1;
-      adjustedExercise.reps = Math.min(20, ex.reps + 2);
-      adjustedExercise.rest = Math.max(30, ex.rest - 15);
-    }
-    
-    if (goal === "lose_weight") {
-      adjustedExercise.rest = Math.max(20, adjustedExercise.rest - 10);
-    } else if (goal === "muscle") {
-      adjustedExercise.rest = adjustedExercise.rest + 15;
-    }
-    
-    return adjustedExercise;
-  });
-  
-  return selectedExercises.map((ex, idx) => ({
-    ...ex,
+  return gymExercises.map((ex, idx) => ({
     id: `${Date.now()}-${idx}`,
+    name: ex.name,
+    sets: ex.sets,
+    reps: typeof ex.reps === 'string' ? parseInt(ex.reps.split('-')[0]) : ex.reps,
+    rest: ex.rest,
     completed: false,
-    muscleGroup: inferMuscleGroup(ex.name),
+    muscleGroup: getMuscleGroupLabel(ex.muscleGroup),
   }));
 }
 
-function inferMuscleGroup(exerciseName: string): string {
-  const lower = exerciseName.toLowerCase();
-  if (lower.includes("supino") || lower.includes("flexão") || lower.includes("peit")) return "Peito";
-  if (lower.includes("costa") || lower.includes("remada") || lower.includes("puxada")) return "Costas";
-  if (lower.includes("agachamento") || lower.includes("leg") || lower.includes("perna")) return "Pernas";
-  if (lower.includes("ombro") || lower.includes("desenvolvimento") || lower.includes("militar")) return "Ombros";
-  if (lower.includes("bíceps") || lower.includes("rosca")) return "Bíceps";
-  if (lower.includes("tríceps")) return "Tríceps";
-  if (lower.includes("abdominal") || lower.includes("prancha")) return "Core";
-  return "Corpo inteiro";
+function getMuscleGroupLabel(muscleGroup: MuscleGroup): string {
+  const labels: Record<MuscleGroup, string> = {
+    chest: 'Peito',
+    back: 'Costas',
+    legs: 'Pernas',
+    shoulders: 'Ombros',
+    biceps: 'Bíceps',
+    triceps: 'Tríceps',
+    abs: 'Abdômen',
+  };
+  return labels[muscleGroup] || 'Geral';
 }
 
 export function calculateWorkoutPoints(
@@ -199,3 +289,6 @@ export function estimateCalories(
   const baseRate = level === "beginner" ? 5 : level === "intermediate" ? 7 : 9;
   return Math.round((duration * baseRate * weight) / 70);
 }
+
+export { gymExerciseDatabase, workoutPlans };
+export type { GymExercise, WorkoutPlan, MuscleGroup };
