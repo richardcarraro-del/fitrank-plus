@@ -85,8 +85,8 @@
 
 ### Colors
 **Primary:**
-- Primary: `#FF6B35` (CTAs, active states)
-- Primary Dark: `#E85A28` (pressed)
+- Primary: `#4CAF50` (CTAs, active states)
+- Primary Dark: `#388E3C` (pressed)
 - Secondary: `#4ECDC4` (success, secondary actions)
 
 **Neutral:**
@@ -99,7 +99,7 @@
 - Success: `#4ECDC4` | Warning: `#FFD93D` | Error: `#FF6B6B` | Premium: `#FFD700`
 
 **Gradients:**
-- Primary: `135deg, #FF6B35 → #F7931E`
+- Primary: `135deg, #4CAF50 → #66BB6A`
 - Dark: `180deg, #0A0E27 → #1A1F3A`
 - Premium: `135deg, #FFD700 → #FFA500`
 

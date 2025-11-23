@@ -182,7 +182,7 @@ export default function StartWorkoutScreen() {
           disabled={!allCompleted}
         >
           <LinearGradient
-            colors={allCompleted ? ["#FF6B35", "#F7931E"] : [Colors.dark.backgroundSecondary, Colors.dark.backgroundSecondary]}
+            colors={allCompleted ? ["#4CAF50", "#66BB6A"] : [Colors.dark.backgroundSecondary, Colors.dark.backgroundSecondary]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.buttonGradient}

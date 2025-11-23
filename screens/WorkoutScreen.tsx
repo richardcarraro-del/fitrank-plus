@@ -71,7 +71,7 @@ export default function WorkoutScreen() {
     <ScreenScrollView contentContainerStyle={styles.content}>
       <View style={styles.generateCard}>
         <LinearGradient
-          colors={["#FF6B35", "#F7931E"]}
+          colors={["#4CAF50", "#66BB6A"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.generateGradient}
