@@ -11,6 +11,7 @@ import { ScreenKeyboardAwareScrollView } from "@/components/ScreenKeyboardAwareS
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,9 +19,29 @@ export default function LoginScreen() {
   const { login, signup, user } = useAuth();
   const navigation = useNavigation();
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async () => {
-    if (!email || !password || (!isLogin && !name)) {
+    if (!email || !password || (!isLogin && (!name || !confirmPassword))) {
       Alert.alert("Erro", "Por favor, preencha todos os campos");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Erro", "Por favor, insira um email válido");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Erro", "A senha deve ter no mínimo 6 caracteres");
+      return;
+    }
+
+    if (!isLogin && password !== confirmPassword) {
+      Alert.alert("Erro", "As senhas não coincidem");
       return;
     }
 
@@ -37,8 +58,9 @@ export default function LoginScreen() {
       } else {
         navigation.navigate("Main" as never);
       }
-    } catch (error) {
-      Alert.alert("Erro", "Falha ao autenticar");
+    } catch (error: any) {
+      const errorMessage = error?.message || "Falha ao autenticar";
+      Alert.alert("Erro", errorMessage);
     } finally {
       setLoading(false);
     }
@@ -101,6 +123,20 @@ export default function LoginScreen() {
               secureTextEntry
             />
           </View>
+
+          {!isLogin && (
+            <View style={styles.inputContainer}>
+              <ThemedText style={styles.label}>Confirmar Senha</ThemedText>
+              <TextInput
+                style={styles.input}
+                placeholder="••••••••"
+                placeholderTextColor={Colors.dark.textTertiary}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+              />
+            </View>
+          )}
 
           <Pressable
             style={({ pressed }) => [

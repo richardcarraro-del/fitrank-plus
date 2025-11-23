@@ -22,8 +22,10 @@ export default function RankingScreen() {
   const loadRanking = async () => {
     try {
       setLoading(true);
+      if (!user?.id) return;
+      
       const academyId = user?.academy?.id || "1";
-      const rankingData = await storage.getRanking(academyId);
+      const rankingData = await storage.getRanking(academyId, user.id, user.name, user.avatar);
       setRanking(rankingData);
     } catch (error) {
       console.error("Error loading ranking:", error);

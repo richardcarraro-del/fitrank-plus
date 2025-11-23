@@ -25,8 +25,10 @@ export default function WorkoutScreen() {
       let isMounted = true;
 
       const loadDataSafely = async () => {
-        const allWorkouts = await storage.getWorkouts();
-        const limit = await storage.canGenerateWorkout(user?.isPremium || false);
+        if (!user?.id) return;
+        
+        const allWorkouts = await storage.getWorkouts(user.id);
+        const limit = await storage.canGenerateWorkout(user?.isPremium || false, user.id);
 
         if (isMounted) {
           setWorkouts(allWorkouts);
@@ -40,7 +42,7 @@ export default function WorkoutScreen() {
       return () => {
         isMounted = false;
       };
-    }, [user?.isPremium])
+    }, [user?.id, user?.isPremium])
   );
 
   const handleGenerateWorkout = async () => {

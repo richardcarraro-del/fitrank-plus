@@ -27,8 +27,10 @@ export default function HomeScreen() {
       let isMounted = true;
 
       const loadDataSafely = async () => {
-        const userStats = await storage.getUserStats();
-        const workouts = await storage.getWorkouts();
+        if (!user?.id) return;
+        
+        const userStats = await storage.getUserStats(user.id);
+        const workouts = await storage.getWorkouts(user.id);
         const today = new Date().toDateString();
         const todaysWorkout = workouts.find(w => new Date(w.date).toDateString() === today);
 
@@ -43,7 +45,7 @@ export default function HomeScreen() {
       return () => {
         isMounted = false;
       };
-    }, [])
+    }, [user?.id])
   );
 
   const handleStartWorkout = () => {

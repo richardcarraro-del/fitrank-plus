@@ -1,5 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export type StoredUser = {
+  id: string;
+  email: string;
+  passwordHash: string;
+  name: string;
+  createdAt: string;
+};
+
 export type Exercise = {
   id: string;
   name: string;
@@ -62,10 +70,141 @@ export type RankingUser = {
   isCurrentUser?: boolean;
 };
 
-export const storage = {
-  async getWorkouts(): Promise<Workout[]> {
+const STORAGE_KEYS = {
+  USERS: '@fitrank:users',
+  CURRENT_USER_ID: '@fitrank:currentUserId',
+};
+
+const hashPassword = (password: string): string => {
+  return btoa(password);
+};
+
+const verifyPassword = (password: string, hash: string): boolean => {
+  try {
+    return btoa(password) === hash;
+  } catch {
+    return false;
+  }
+};
+
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const getUserStorageKey = (userId: string, key: string): string => {
+  return `@fitrank:user_${userId}:${key}`;
+};
+
+const authRepository = {
+  async getUsers(): Promise<StoredUser[]> {
     try {
-      const data = await AsyncStorage.getItem("@workouts");
+      const data = await AsyncStorage.getItem(STORAGE_KEYS.USERS);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error("Error getting users:", error);
+      return [];
+    }
+  },
+
+  async saveUser(user: StoredUser): Promise<void> {
+    try {
+      const users = await this.getUsers();
+      users.push(user);
+      await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    } catch (error) {
+      console.error("Error saving user:", error);
+      throw new Error("Falha ao salvar usuário");
+    }
+  },
+
+  async getUserByEmail(email: string): Promise<StoredUser | null> {
+    try {
+      const users = await this.getUsers();
+      return users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    } catch (error) {
+      console.error("Error getting user by email:", error);
+      return null;
+    }
+  },
+
+  async registerUser(email: string, password: string, name: string): Promise<StoredUser> {
+    if (!validateEmail(email)) {
+      throw new Error("Email inválido");
+    }
+
+    if (password.length < 6) {
+      throw new Error("A senha deve ter no mínimo 6 caracteres");
+    }
+
+    if (!name || name.trim().length === 0) {
+      throw new Error("Nome é obrigatório");
+    }
+
+    const existingUser = await this.getUserByEmail(email);
+    if (existingUser) {
+      throw new Error("Este email já está cadastrado");
+    }
+
+    const newUser: StoredUser = {
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+      email: email.toLowerCase(),
+      passwordHash: hashPassword(password),
+      name: name.trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    await this.saveUser(newUser);
+    return newUser;
+  },
+
+  async validateCredentials(email: string, password: string): Promise<StoredUser | null> {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      return null;
+    }
+
+    if (!verifyPassword(password, user.passwordHash)) {
+      return null;
+    }
+
+    return user;
+  },
+
+  async getCurrentUserId(): Promise<string | null> {
+    try {
+      return await AsyncStorage.getItem(STORAGE_KEYS.CURRENT_USER_ID);
+    } catch (error) {
+      console.error("Error getting current user ID:", error);
+      return null;
+    }
+  },
+
+  async setCurrentUserId(userId: string): Promise<void> {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.CURRENT_USER_ID, userId);
+    } catch (error) {
+      console.error("Error setting current user ID:", error);
+      throw new Error("Falha ao salvar sessão");
+    }
+  },
+
+  async clearCurrentUserId(): Promise<void> {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER_ID);
+    } catch (error) {
+      console.error("Error clearing current user ID:", error);
+    }
+  },
+};
+
+export { authRepository };
+
+export const storage = {
+  async getWorkouts(userId: string): Promise<Workout[]> {
+    try {
+      const key = getUserStorageKey(userId, 'workouts');
+      const data = await AsyncStorage.getItem(key);
       return data ? JSON.parse(data) : [];
     } catch (error) {
       console.error("Error getting workouts:", error);
@@ -73,19 +212,21 @@ export const storage = {
     }
   },
 
-  async saveWorkout(workout: Workout): Promise<void> {
+  async saveWorkout(workout: Workout, userId: string): Promise<void> {
     try {
-      const workouts = await this.getWorkouts();
+      const workouts = await this.getWorkouts(userId);
       workouts.unshift(workout);
-      await AsyncStorage.setItem("@workouts", JSON.stringify(workouts));
+      const key = getUserStorageKey(userId, 'workouts');
+      await AsyncStorage.setItem(key, JSON.stringify(workouts));
     } catch (error) {
       console.error("Error saving workout:", error);
     }
   },
 
-  async getUserStats(): Promise<UserStats> {
+  async getUserStats(userId: string): Promise<UserStats> {
     try {
-      const data = await AsyncStorage.getItem("@user_stats");
+      const key = getUserStorageKey(userId, 'stats');
+      const data = await AsyncStorage.getItem(key);
       if (data) {
         return JSON.parse(data);
       }
@@ -110,19 +251,21 @@ export const storage = {
     }
   },
 
-  async updateUserStats(updates: Partial<UserStats>): Promise<void> {
+  async updateUserStats(updates: Partial<UserStats>, userId: string): Promise<void> {
     try {
-      const stats = await this.getUserStats();
+      const stats = await this.getUserStats(userId);
       const updatedStats = { ...stats, ...updates };
-      await AsyncStorage.setItem("@user_stats", JSON.stringify(updatedStats));
+      const key = getUserStorageKey(userId, 'stats');
+      await AsyncStorage.setItem(key, JSON.stringify(updatedStats));
     } catch (error) {
       console.error("Error updating user stats:", error);
     }
   },
 
-  async getAchievements(): Promise<Achievement[]> {
+  async getAchievements(userId: string): Promise<Achievement[]> {
     try {
-      const data = await AsyncStorage.getItem("@achievements");
+      const key = getUserStorageKey(userId, 'achievements');
+      const data = await AsyncStorage.getItem(key);
       if (data) {
         return JSON.parse(data);
       }
@@ -208,35 +351,39 @@ export const storage = {
     ];
   },
 
-  async saveAchievements(achievements: Achievement[]): Promise<void> {
+  async saveAchievements(achievements: Achievement[], userId: string): Promise<void> {
     try {
-      await AsyncStorage.setItem("@achievements", JSON.stringify(achievements));
+      const key = getUserStorageKey(userId, 'achievements');
+      await AsyncStorage.setItem(key, JSON.stringify(achievements));
     } catch (error) {
       console.error("Error saving achievements:", error);
     }
   },
 
-  async getTodayWorkoutCount(): Promise<number> {
+  async getTodayWorkoutCount(userId: string): Promise<number> {
     try {
-      const count = await AsyncStorage.getItem("@today_workout_count");
+      const key = getUserStorageKey(userId, 'todayWorkoutCount');
+      const count = await AsyncStorage.getItem(key);
       return count ? parseInt(count) : 0;
     } catch (error) {
       return 0;
     }
   },
 
-  async incrementTodayWorkoutCount(): Promise<void> {
+  async incrementTodayWorkoutCount(userId: string): Promise<void> {
     try {
-      const count = await this.getTodayWorkoutCount();
-      await AsyncStorage.setItem("@today_workout_count", (count + 1).toString());
+      const count = await this.getTodayWorkoutCount(userId);
+      const key = getUserStorageKey(userId, 'todayWorkoutCount');
+      await AsyncStorage.setItem(key, (count + 1).toString());
     } catch (error) {
       console.error("Error incrementing workout count:", error);
     }
   },
 
-  async resetTodayWorkoutCount(): Promise<void> {
+  async resetTodayWorkoutCount(userId: string): Promise<void> {
     try {
-      await AsyncStorage.setItem("@today_workout_count", "0");
+      const key = getUserStorageKey(userId, 'todayWorkoutCount');
+      await AsyncStorage.setItem(key, "0");
     } catch (error) {
       console.error("Error resetting workout count:", error);
     }
@@ -275,20 +422,16 @@ export const storage = {
     }
   },
 
-  async getRanking(academyId: string): Promise<RankingUser[]> {
+  async getRanking(academyId: string, userId: string, userName: string, userAvatar: string): Promise<RankingUser[]> {
     try {
-      const userData = await AsyncStorage.getItem("@user");
-      if (!userData) return this.getDefaultRanking(academyId);
-
-      const user = JSON.parse(userData);
-      const stats = await this.getUserStats();
+      const stats = await this.getUserStats(userId);
       
       const defaultRanking = this.getDefaultRanking(academyId);
       
       const userRankingEntry: RankingUser = {
-        id: user.id,
-        name: user.name,
-        avatar: user.avatar || "1",
+        id: userId,
+        name: userName,
+        avatar: userAvatar || "1",
         points: stats.totalPoints,
         weeklyPoints: stats.weeklyPoints,
         monthlyPoints: stats.monthlyPoints,
@@ -296,7 +439,7 @@ export const storage = {
         isCurrentUser: true,
       };
       
-      const allUsers = [...defaultRanking.filter(u => u.id !== user.id), userRankingEntry];
+      const allUsers = [...defaultRanking.filter(u => u.id !== userId), userRankingEntry];
       allUsers.sort((a, b) => b.monthlyPoints - a.monthlyPoints);
       
       allUsers.forEach((u, index) => {
@@ -329,10 +472,10 @@ export const storage = {
     }));
   },
 
-  async completeWorkout(workout: Workout): Promise<void> {
+  async completeWorkout(workout: Workout, userId: string): Promise<void> {
     try {
-      await this.saveWorkout(workout);
-      const stats = await this.ensureWeeklyCountersAreFresh();
+      await this.saveWorkout(workout, userId);
+      const stats = await this.ensureWeeklyCountersAreFresh(userId);
       
       const updatedStats: Partial<UserStats> = {
         totalWorkouts: stats.totalWorkouts + 1,
@@ -359,8 +502,8 @@ export const storage = {
         updatedStats.bestStreak = 1;
       }
       
-      await this.updateUserStats(updatedStats);
-      await this.checkAndUnlockAchievements(updatedStats as UserStats);
+      await this.updateUserStats(updatedStats, userId);
+      await this.checkAndUnlockAchievements(updatedStats as UserStats, userId);
     } catch (error) {
       console.error("Error completing workout:", error);
     }
@@ -384,8 +527,8 @@ export const storage = {
     return week1.getTime() === week2.getTime();
   },
 
-  async ensureWeeklyCountersAreFresh(): Promise<UserStats> {
-    const stats = await this.getUserStats();
+  async ensureWeeklyCountersAreFresh(userId: string): Promise<UserStats> {
+    const stats = await this.getUserStats(userId);
     const currentWeekStart = this.getWeekStart();
     const savedWeekStart = stats.weekStartDate ? new Date(stats.weekStartDate) : null;
     
@@ -402,16 +545,16 @@ export const storage = {
         weeklyWorkoutsCount: 0,
         weekStartDate: currentWeekStart.toISOString(),
         weeklyPoints: 0,
-      });
+      }, userId);
       return updatedStats;
     }
     
     return stats;
   },
 
-  async checkAndUnlockAchievements(stats: UserStats): Promise<Achievement[]> {
+  async checkAndUnlockAchievements(stats: UserStats, userId: string): Promise<Achievement[]> {
     try {
-      const achievements = await this.getAchievements();
+      const achievements = await this.getAchievements(userId);
       let hasChanges = false;
       const newlyUnlocked: Achievement[] = [];
       
@@ -453,7 +596,7 @@ export const storage = {
       });
       
       if (hasChanges) {
-        await this.saveAchievements(achievements);
+        await this.saveAchievements(achievements, userId);
       }
       
       return newlyUnlocked;
@@ -463,13 +606,13 @@ export const storage = {
     }
   },
 
-  async canGenerateWorkout(isPremium: boolean): Promise<{ canGenerate: boolean; remaining: number }> {
+  async canGenerateWorkout(isPremium: boolean, userId: string): Promise<{ canGenerate: boolean; remaining: number }> {
     try {
       if (isPremium) {
         return { canGenerate: true, remaining: -1 };
       }
       
-      const stats = await this.ensureWeeklyCountersAreFresh();
+      const stats = await this.ensureWeeklyCountersAreFresh(userId);
       const weeklyWorkouts = stats.weeklyWorkoutsCount || 0;
       const FREE_WEEKLY_LIMIT = 2;
       

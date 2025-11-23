@@ -25,9 +25,11 @@ export default function ProfileScreen() {
       let isMounted = true;
       
       const loadDataSafely = async () => {
-        const userStats = await storage.getUserStats();
+        if (!user?.id) return;
+        
+        const userStats = await storage.getUserStats(user.id);
         const academyList = await storage.getAcademies();
-        const achievementList = await storage.getAchievements();
+        const achievementList = await storage.getAchievements(user.id);
         
         if (isMounted) {
           setStats(userStats);
@@ -41,13 +43,15 @@ export default function ProfileScreen() {
       return () => {
         isMounted = false;
       };
-    }, [])
+    }, [user?.id])
   );
 
   const loadData = async () => {
-    const userStats = await storage.getUserStats();
+    if (!user?.id) return;
+    
+    const userStats = await storage.getUserStats(user.id);
     const academyList = await storage.getAcademies();
-    const achievementList = await storage.getAchievements();
+    const achievementList = await storage.getAchievements(user.id);
     setStats(userStats);
     setAcademies(academyList);
     setAchievements(achievementList);

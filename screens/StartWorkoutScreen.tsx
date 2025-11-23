@@ -79,7 +79,7 @@ export default function StartWorkoutScreen() {
     if (!user || !startTime) return;
 
     const duration = Math.floor(elapsedTime / 60);
-    const stats = await storage.getUserStats();
+    const stats = await storage.getUserStats(user.id);
     const points = calculateWorkoutPoints(
       duration,
       exercises.length,
@@ -100,10 +100,10 @@ export default function StartWorkoutScreen() {
       calories,
     };
 
-    await storage.completeWorkout(workout);
+    await storage.completeWorkout(workout, user.id);
     
-    const updatedStats = await storage.getUserStats();
-    const newlyUnlocked = await storage.checkAndUnlockAchievements(updatedStats);
+    const updatedStats = await storage.getUserStats(user.id);
+    const newlyUnlocked = await storage.checkAndUnlockAchievements(updatedStats, user.id);
 
     let message = `Treino completo!\n\nVocê ganhou ${points} pontos\nQueimou ~${calories} calorias\nSequência: ${updatedStats.currentStreak} dias`;
     

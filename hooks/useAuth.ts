@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { authRepository } from "@/utils/storage";
 
 export type User = {
   id: string;
@@ -57,12 +58,19 @@ export function useAuthState(): AuthContextType {
 
   const loadUser = async () => {
     try {
-      const userData = await AsyncStorage.getItem("@user");
-      const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
-      if (userData) {
-        setUser(JSON.parse(userData));
+      const currentUserId = await authRepository.getCurrentUserId();
+      
+      if (currentUserId) {
+        const userKey = `@fitrank:user_${currentUserId}:profile`;
+        const userData = await AsyncStorage.getItem(userKey);
+        const onboardingKey = `@fitrank:user_${currentUserId}:onboarding_complete`;
+        const onboardingComplete = await AsyncStorage.getItem(onboardingKey);
+        
+        if (userData) {
+          setUser(JSON.parse(userData));
+        }
+        setHasCompletedOnboardingState(onboardingComplete === "true");
       }
-      setHasCompletedOnboardingState(onboardingComplete === "true");
     } catch (error) {
       console.error("Error loading user:", error);
     } finally {
@@ -71,37 +79,53 @@ export function useAuthState(): AuthContextType {
   };
 
   const login = async (email: string, password: string) => {
-    const mockUser: User = {
-      id: "1",
-      name: "Usuário Demo",
-      email,
-      avatar: "1",
-      age: 25,
-      weight: 70,
-      height: 175,
-      goal: "hypertrophy",
-      level: "intermediate",
-      timeAvailable: 60,
-      weeklyFrequency: 4,
-      location: "gym",
-      equipment: ["dumbbells", "barbell", "bench"],
-      academy: {
-        id: "1",
-        name: "SmartFit Centro",
-        address: "Av. Paulista, 1000",
-      },
-      isPremium: false,
-      selectedPlan: "ABCD",
-    };
-    await AsyncStorage.setItem("@user", JSON.stringify(mockUser));
-    setUser(mockUser);
+    const storedUser = await authRepository.validateCredentials(email, password);
+    
+    if (!storedUser) {
+      throw new Error("Email ou senha incorretos");
+    }
+
+    await authRepository.setCurrentUserId(storedUser.id);
+
+    const userKey = `@fitrank:user_${storedUser.id}:profile`;
+    const existingUserData = await AsyncStorage.getItem(userKey);
+
+    let fullUser: User;
+    
+    if (existingUserData) {
+      fullUser = JSON.parse(existingUserData);
+    } else {
+      fullUser = {
+        id: storedUser.id,
+        name: storedUser.name,
+        email: storedUser.email,
+        avatar: "1",
+        age: 0,
+        weight: 0,
+        height: 0,
+        goal: "beginner",
+        level: "beginner",
+        timeAvailable: 30,
+        weeklyFrequency: 3,
+        location: "gym",
+        equipment: [],
+        isPremium: false,
+      };
+      await AsyncStorage.setItem(userKey, JSON.stringify(fullUser));
+    }
+
+    setUser(fullUser);
   };
 
   const signup = async (email: string, password: string, name: string) => {
+    const storedUser = await authRepository.registerUser(email, password, name);
+
+    await authRepository.setCurrentUserId(storedUser.id);
+
     const newUser: User = {
-      id: Date.now().toString(),
-      name,
-      email,
+      id: storedUser.id,
+      name: storedUser.name,
+      email: storedUser.email,
       avatar: "1",
       age: 0,
       weight: 0,
@@ -114,12 +138,14 @@ export function useAuthState(): AuthContextType {
       equipment: [],
       isPremium: false,
     };
-    await AsyncStorage.setItem("@user", JSON.stringify(newUser));
+
+    const userKey = `@fitrank:user_${storedUser.id}:profile`;
+    await AsyncStorage.setItem(userKey, JSON.stringify(newUser));
     setUser(newUser);
   };
 
   const logout = async () => {
-    await AsyncStorage.multiRemove(["@user", "@onboarding_complete", "@workouts", "@user_stats"]);
+    await authRepository.clearCurrentUserId();
     setUser(null);
     setHasCompletedOnboardingState(false);
   };
@@ -127,12 +153,15 @@ export function useAuthState(): AuthContextType {
   const updateProfile = async (updates: Partial<User>) => {
     if (!user) return;
     const updatedUser = { ...user, ...updates };
-    await AsyncStorage.setItem("@user", JSON.stringify(updatedUser));
+    const userKey = `@fitrank:user_${user.id}:profile`;
+    await AsyncStorage.setItem(userKey, JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
 
   const setHasCompletedOnboarding = async (value: boolean) => {
-    await AsyncStorage.setItem("@onboarding_complete", value.toString());
+    if (!user) return;
+    const onboardingKey = `@fitrank:user_${user.id}:onboarding_complete`;
+    await AsyncStorage.setItem(onboardingKey, value.toString());
     setHasCompletedOnboardingState(value);
   };
 
