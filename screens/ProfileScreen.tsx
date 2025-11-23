@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { StyleSheet, View, Alert, Pressable, Modal, FlatList, ScrollView } from "react-native";
+import { StyleSheet, View, Alert, Pressable, Modal, FlatList, ScrollView, TextInput } from "react-native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +19,11 @@ export default function ProfileScreen() {
   const [showAcademyModal, setShowAcademyModal] = useState(false);
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showFrequencyModal, setShowFrequencyModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [editName, setEditName] = useState(user?.name || "");
+  const [editAge, setEditAge] = useState(user?.age.toString() || "");
+  const [editWeight, setEditWeight] = useState(user?.weight.toString() || "");
+  const [editHeight, setEditHeight] = useState(user?.height.toString() || "");
 
   useFocusEffect(
     useCallback(() => {
@@ -132,6 +137,35 @@ export default function ProfileScreen() {
       beginner: "Iniciante",
     };
     return labels[goal];
+  };
+
+  const handleSaveProfile = async () => {
+    if (!editName.trim()) {
+      Alert.alert("Erro", "Por favor, preencha seu nome");
+      return;
+    }
+
+    const age = parseInt(editAge) || 25;
+    const weight = parseInt(editWeight) || 70;
+    const height = parseInt(editHeight) || 170;
+
+    await updateProfile({
+      name: editName,
+      age,
+      weight,
+      height,
+    });
+    
+    setShowEditProfileModal(false);
+    Alert.alert("Sucesso", "Perfil atualizado com sucesso!");
+  };
+
+  const handleOpenEditProfile = () => {
+    setEditName(user?.name || "");
+    setEditAge(user?.age.toString() || "");
+    setEditWeight(user?.weight.toString() || "");
+    setEditHeight(user?.height.toString() || "");
+    setShowEditProfileModal(true);
   };
 
   if (!user) {
@@ -347,10 +381,22 @@ export default function ProfileScreen() {
       <View style={styles.section}>
         <ThemedText style={styles.sectionTitle}>Configurações</ThemedText>
         <View style={styles.settingsList}>
-          <SettingItem icon="user" label="Editar Perfil" onPress={() => {}} />
-          <SettingItem icon="bell" label="Notificações" onPress={() => {}} />
-          <SettingItem icon="shield" label="Privacidade" onPress={() => {}} />
-          <SettingItem icon="help-circle" label="Ajuda" onPress={() => {}} />
+          <SettingItem icon="user" label="Editar Perfil" onPress={handleOpenEditProfile} />
+          <SettingItem 
+            icon="bell" 
+            label="Notificações" 
+            onPress={() => Alert.alert("Notificações", "Em breve você poderá configurar notificações personalizadas!")} 
+          />
+          <SettingItem 
+            icon="shield" 
+            label="Privacidade" 
+            onPress={() => Alert.alert("Privacidade", "Em breve você poderá gerenciar suas configurações de privacidade!")} 
+          />
+          <SettingItem 
+            icon="help-circle" 
+            label="Ajuda" 
+            onPress={() => Alert.alert("Ajuda", "Precisa de ajuda?\n\nEntre em contato: suporte@fitrank.com")} 
+          />
           <SettingItem
             icon="log-out"
             label="Sair"
@@ -474,6 +520,89 @@ export default function ProfileScreen() {
                   )}
                 </Pressable>
               ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showEditProfileModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowEditProfileModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>Editar Perfil</ThemedText>
+              <Pressable onPress={() => setShowEditProfileModal(false)}>
+                <Feather name="x" size={24} color={Colors.dark.text} />
+              </Pressable>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              <View style={styles.inputContainer}>
+                <ThemedText style={styles.inputLabel}>Nome</ThemedText>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Seu nome"
+                  placeholderTextColor={Colors.dark.textTertiary}
+                  value={editName}
+                  onChangeText={setEditName}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <ThemedText style={styles.inputLabel}>Idade</ThemedText>
+                <TextInput
+                  style={styles.input}
+                  placeholder="25"
+                  placeholderTextColor={Colors.dark.textTertiary}
+                  value={editAge}
+                  onChangeText={setEditAge}
+                  keyboardType="number-pad"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <ThemedText style={styles.inputLabel}>Peso (kg)</ThemedText>
+                <TextInput
+                  style={styles.input}
+                  placeholder="70"
+                  placeholderTextColor={Colors.dark.textTertiary}
+                  value={editWeight}
+                  onChangeText={setEditWeight}
+                  keyboardType="number-pad"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <ThemedText style={styles.inputLabel}>Altura (cm)</ThemedText>
+                <TextInput
+                  style={styles.input}
+                  placeholder="170"
+                  placeholderTextColor={Colors.dark.textTertiary}
+                  value={editHeight}
+                  onChangeText={setEditHeight}
+                  keyboardType="number-pad"
+                />
+              </View>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.saveButton,
+                  pressed && styles.buttonPressed,
+                ]}
+                onPress={handleSaveProfile}
+              >
+                <LinearGradient
+                  colors={["#4CAF50", "#66BB6A"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.saveButtonGradient}
+                >
+                  <ThemedText style={styles.saveButtonText}>Salvar</ThemedText>
+                </LinearGradient>
+              </Pressable>
             </ScrollView>
           </View>
         </View>
@@ -858,5 +987,39 @@ const styles = StyleSheet.create({
   optionItemText: {
     ...Typography.bodyLarge,
     fontWeight: "500",
+  },
+  inputContainer: {
+    marginBottom: Spacing.lg,
+  },
+  inputLabel: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+    marginBottom: Spacing.sm,
+  },
+  input: {
+    backgroundColor: Colors.dark.backgroundSecondary,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
+    borderRadius: BorderRadius.sm,
+    padding: Spacing.md,
+    color: Colors.dark.text,
+    ...Typography.bodyLarge,
+  },
+  saveButton: {
+    width: "100%",
+    height: Spacing.buttonHeight,
+    borderRadius: BorderRadius.md,
+    overflow: "hidden",
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
+  saveButtonGradient: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  saveButtonText: {
+    ...Typography.button,
+    color: Colors.dark.buttonText,
   },
 });
