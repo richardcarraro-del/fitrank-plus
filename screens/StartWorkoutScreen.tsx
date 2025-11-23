@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable, Alert } from "react-native";
+import { View, StyleSheet, Pressable, Alert, ScrollView } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,7 +7,7 @@ import { storage, Exercise, Workout } from "@/utils/storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ScreenScrollView } from "@/components/ScreenScrollView";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { generateWorkout, calculateWorkoutPoints, estimateCalories } from "@/utils/workoutGenerator";
 
 export default function StartWorkoutScreen() {
@@ -15,6 +15,7 @@ export default function StartWorkoutScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const params = route.params as any;
+  const insets = useSafeAreaInsets();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -142,7 +143,7 @@ export default function StartWorkoutScreen() {
         </View>
       </View>
 
-      <ScreenScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.xl }]}>
         <View style={styles.progressCard}>
           <ThemedText style={styles.progressTitle}>Progresso</ThemedText>
           <View style={styles.progressBar}>
@@ -188,7 +189,7 @@ export default function StartWorkoutScreen() {
             </ThemedText>
           </LinearGradient>
         </Pressable>
-      </ScreenScrollView>
+      </ScrollView>
     </View>
   );
 }
