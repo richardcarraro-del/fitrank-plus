@@ -78,12 +78,27 @@ export default function WorkoutScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.generateGradient}
         >
-          <ThemedText style={styles.generateTitle}>Gerar Novo Treino</ThemedText>
-          {!user?.isPremium && (
-            <ThemedText style={styles.generateLimit}>
-              {remaining} de {FREE_WEEKLY_LIMIT} treinos gratuitos restantes esta semana
-            </ThemedText>
-          )}
+          <View style={styles.generateHeader}>
+            <View style={styles.generateIconContainer}>
+              <Feather name="plus-circle" size={32} color={Colors.dark.text} />
+            </View>
+            <View style={styles.generateInfo}>
+              <ThemedText style={styles.generateTitle}>Gerar Novo Treino</ThemedText>
+              {!user?.isPremium ? (
+                <View style={styles.limitBadge}>
+                  <Feather name="zap" size={14} color={Colors.dark.text} />
+                  <ThemedText style={styles.generateLimit}>
+                    {remaining} de {FREE_WEEKLY_LIMIT} restantes
+                  </ThemedText>
+                </View>
+              ) : (
+                <View style={styles.premiumBadge}>
+                  <Feather name="award" size={14} color={Colors.dark.premium} />
+                  <ThemedText style={styles.premiumText}>Ilimitado</ThemedText>
+                </View>
+              )}
+            </View>
+          </View>
           <Pressable
             style={({ pressed }) => [
               styles.generateButton,
@@ -93,23 +108,34 @@ export default function WorkoutScreen() {
             onPress={handleGenerateWorkout}
             disabled={!canGenerate && !user?.isPremium}
           >
+            <Feather 
+              name={!canGenerate && !user?.isPremium ? "lock" : "play"} 
+              size={18} 
+              color={Colors.dark.buttonText} 
+              style={{ marginRight: Spacing.sm }} 
+            />
             <ThemedText style={styles.generateButtonText}>
               {!canGenerate && !user?.isPremium
-                ? "Limite Semanal Atingido - Upgrade para Premium"
-                : "Gerar Treino"}
+                ? "Upgrade para Premium"
+                : "Gerar Treino Personalizado"}
             </ThemedText>
           </Pressable>
         </LinearGradient>
       </View>
 
-      <ThemedText style={styles.sectionTitle}>Histórico de Treinos</ThemedText>
+      <View style={styles.sectionHeader}>
+        <Feather name="clock" size={20} color={Colors.dark.primary} />
+        <ThemedText style={styles.sectionTitle}>Histórico de Treinos</ThemedText>
+      </View>
 
       {workouts.length === 0 ? (
         <View style={styles.emptyState}>
-          <Feather name="activity" size={48} color={Colors.dark.textTertiary} />
+          <View style={styles.emptyIconContainer}>
+            <Feather name="activity" size={40} color={Colors.dark.textTertiary} />
+          </View>
           <ThemedText style={styles.emptyText}>Nenhum treino realizado ainda</ThemedText>
           <ThemedText style={styles.emptySubtext}>
-            Gere e complete seu primeiro treino!
+            Gere e complete seu primeiro treino para começar!
           </ThemedText>
         </View>
       ) : (
@@ -189,30 +215,75 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   generateCard: {
-    marginBottom: Spacing.lg,
-    borderRadius: BorderRadius.md,
+    marginBottom: Spacing.xl,
+    borderRadius: BorderRadius.lg,
     overflow: "hidden",
+    elevation: 4,
   },
   generateGradient: {
-    padding: Spacing.lg,
+    padding: Spacing.xl,
+  },
+  generateHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.lg,
+    marginBottom: Spacing.lg,
+  },
+  generateIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  generateInfo: {
+    flex: 1,
   },
   generateTitle: {
-    ...Typography.h3,
-    marginBottom: Spacing.sm,
+    ...Typography.h2,
     color: Colors.dark.text,
+    marginBottom: Spacing.xs,
+  },
+  limitBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.xs,
+    alignSelf: "flex-start",
   },
   generateLimit: {
     ...Typography.caption,
-    marginBottom: Spacing.md,
     color: Colors.dark.text,
-    opacity: 0.8,
+    fontWeight: "600",
+  },
+  premiumBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    backgroundColor: "rgba(255, 215, 0, 0.2)",
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.xs,
+    alignSelf: "flex-start",
+  },
+  premiumText: {
+    ...Typography.caption,
+    color: Colors.dark.premium,
+    fontWeight: "600",
   },
   generateButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
     height: Spacing.buttonHeight,
     borderRadius: BorderRadius.xl,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   generateButtonText: {
     ...Typography.button,
@@ -222,33 +293,51 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   buttonDisabled: {
-    opacity: 0.5,
+    opacity: 0.6,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   sectionTitle: {
     ...Typography.h3,
-    marginBottom: Spacing.md,
   },
   emptyState: {
     alignItems: "center",
-    paddingVertical: Spacing.xxl,
-    gap: Spacing.md,
+    backgroundColor: Colors.dark.backgroundDefault,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.xxl,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
+    gap: Spacing.lg,
+  },
+  emptyIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyText: {
-    ...Typography.bodyLarge,
-    fontWeight: "600",
+    ...Typography.h3,
+    textAlign: "center",
   },
   emptySubtext: {
     ...Typography.body,
     color: Colors.dark.textSecondary,
+    textAlign: "center",
   },
   workoutsList: {
-    gap: Spacing.md,
+    gap: Spacing.lg,
     marginBottom: Spacing.xl,
   },
   workoutCard: {
     backgroundColor: Colors.dark.backgroundDefault,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.dark.border,
   },
@@ -256,7 +345,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.md,
   },
   workoutDate: {
     ...Typography.h3,
@@ -271,9 +360,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.dark.backgroundSecondary,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    borderRadius: BorderRadius.xs,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.sm,
     gap: Spacing.xs,
   },
   pointsText: {
@@ -292,8 +381,8 @@ const styles = StyleSheet.create({
     color: Colors.dark.success,
   },
   exercisesExpanded: {
-    marginTop: Spacing.md,
-    paddingTop: Spacing.md,
+    marginTop: Spacing.lg,
+    paddingTop: Spacing.lg,
     borderTopWidth: 1,
     borderTopColor: Colors.dark.border,
   },
@@ -301,24 +390,30 @@ const styles = StyleSheet.create({
     ...Typography.caption,
     fontWeight: "600",
     color: Colors.dark.textSecondary,
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.md,
     textTransform: "uppercase",
+    letterSpacing: 1,
   },
   exerciseItem: {
     flexDirection: "row",
-    gap: Spacing.sm,
-    paddingVertical: Spacing.xs,
+    gap: Spacing.md,
+    paddingVertical: Spacing.sm,
     alignItems: "flex-start",
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.sm,
+    marginBottom: Spacing.sm,
   },
   exerciseNumber: {
-    ...Typography.caption,
-    color: Colors.dark.textTertiary,
-    width: 20,
+    ...Typography.body,
+    color: Colors.dark.primary,
+    fontWeight: "600",
+    width: 24,
   },
   exerciseItemName: {
-    ...Typography.body,
-    fontWeight: "500",
-    marginBottom: 2,
+    ...Typography.bodyLarge,
+    fontWeight: "600",
+    marginBottom: 4,
   },
   exerciseItemDetails: {
     ...Typography.caption,
@@ -326,6 +421,9 @@ const styles = StyleSheet.create({
   },
   expandIndicator: {
     alignItems: "center",
-    marginTop: Spacing.sm,
+    marginTop: Spacing.md,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: Colors.dark.border,
   },
 });

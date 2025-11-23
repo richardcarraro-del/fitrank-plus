@@ -212,7 +212,10 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
-        <ThemedText style={styles.sectionTitle}>Conquistas</ThemedText>
+        <View style={styles.sectionHeader}>
+          <Feather name="award" size={24} color={Colors.dark.primary} />
+          <ThemedText style={styles.sectionTitle}>Conquistas</ThemedText>
+        </View>
         <View style={styles.achievementsGrid}>
           {achievements.slice(0, 6).map((achievement) => (
             <View
@@ -222,9 +225,12 @@ export default function ProfileScreen() {
                 !achievement.earned && styles.achievementLocked,
               ]}
             >
-              <View style={styles.achievementIcon}>
+              <View style={[
+                styles.achievementIcon,
+                achievement.earned && styles.achievementIconEarned,
+              ]}>
                 {achievement.earned ? (
-                  <Feather name="award" size={24} color={Colors.dark.premium} />
+                  <Feather name="award" size={28} color={Colors.dark.premium} />
                 ) : (
                   <Feather name="lock" size={24} color={Colors.dark.textTertiary} />
                 )}
@@ -235,23 +241,29 @@ export default function ProfileScreen() {
               ]}>
                 {achievement.name}
               </ThemedText>
-              <ThemedText style={styles.achievementDesc}>
+              <ThemedText style={styles.achievementDesc} numberOfLines={2}>
                 {achievement.description}
               </ThemedText>
               {achievement.earned && achievement.earnedDate && (
-                <ThemedText style={styles.achievementDate}>
-                  {new Date(achievement.earnedDate).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "short",
-                  })}
-                </ThemedText>
+                <View style={styles.achievementDateBadge}>
+                  <Feather name="check-circle" size={12} color={Colors.dark.success} />
+                  <ThemedText style={styles.achievementDate}>
+                    {new Date(achievement.earnedDate).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "short",
+                    })}
+                  </ThemedText>
+                </View>
               )}
             </View>
           ))}
         </View>
-        <ThemedText style={styles.achievementsSummary}>
-          {achievements.filter(a => a.earned).length} de {achievements.length} conquistas desbloqueadas
-        </ThemedText>
+        <View style={styles.achievementsSummaryCard}>
+          <Feather name="star" size={20} color={Colors.dark.primary} />
+          <ThemedText style={styles.achievementsSummary}>
+            {achievements.filter(a => a.earned).length} de {achievements.length} conquistas desbloqueadas
+          </ThemedText>
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -577,14 +589,20 @@ const styles = StyleSheet.create({
     color: Colors.dark.premium,
   },
   section: {
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.xxl,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   sectionTitle: {
     ...Typography.h3,
-    marginBottom: Spacing.md,
   },
   statsGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.md,
   },
   statCard: {
@@ -707,49 +725,75 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: Spacing.md,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   achievementCard: {
     width: "48%",
     backgroundColor: Colors.dark.backgroundDefault,
-    padding: Spacing.md,
-    borderRadius: BorderRadius.md,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.lg,
     borderWidth: 2,
     borderColor: Colors.dark.premium,
     alignItems: "center",
+    gap: Spacing.sm,
   },
   achievementLocked: {
     borderColor: Colors.dark.border,
-    opacity: 0.6,
+    backgroundColor: Colors.dark.backgroundDefault,
+    opacity: 0.5,
   },
   achievementIcon: {
-    marginBottom: Spacing.sm,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  achievementIconEarned: {
+    backgroundColor: "rgba(255, 215, 0, 0.15)",
   },
   achievementName: {
-    ...Typography.caption,
-    fontWeight: "600",
+    ...Typography.body,
+    fontWeight: "700",
     textAlign: "center",
-    marginBottom: 4,
   },
   achievementLockedText: {
     color: Colors.dark.textTertiary,
   },
   achievementDesc: {
     ...Typography.caption,
-    fontSize: 10,
     color: Colors.dark.textSecondary,
     textAlign: "center",
-    marginBottom: 4,
+  },
+  achievementDateBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.xs,
   },
   achievementDate: {
     ...Typography.caption,
-    fontSize: 9,
-    color: Colors.dark.premium,
+    fontSize: 10,
+    color: Colors.dark.success,
+    fontWeight: "600",
+  },
+  achievementsSummaryCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
   },
   achievementsSummary: {
-    ...Typography.caption,
+    ...Typography.body,
     color: Colors.dark.textSecondary,
-    textAlign: "center",
+    fontWeight: "500",
   },
   trainingPreferences: {
     gap: Spacing.md,

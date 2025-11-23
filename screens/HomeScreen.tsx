@@ -60,32 +60,58 @@ export default function HomeScreen() {
     <ScreenScrollView contentContainerStyle={styles.content}>
       <View style={styles.streakCard}>
         <LinearGradient
-          colors={stats.currentStreak >= 7 ? ["#4CAF50", "#66BB6A"] : [Colors.dark.backgroundDefault, Colors.dark.backgroundDefault]}
+          colors={stats.currentStreak >= 7 ? ["#4CAF50", "#66BB6A"] : [Colors.dark.backgroundSecondary, Colors.dark.backgroundSecondary]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.streakGradient}
         >
-          <Feather name="zap" size={32} color={Colors.dark.text} />
+          <View style={styles.streakIconContainer}>
+            <Feather name="zap" size={28} color={Colors.dark.text} />
+          </View>
           <View style={styles.streakContent}>
             <ThemedText style={styles.streakNumber}>{stats.currentStreak}</ThemedText>
-            <ThemedText style={styles.streakLabel}>dias seguidos</ThemedText>
+            <ThemedText style={styles.streakLabel}>dias de sequência</ThemedText>
           </View>
+          {stats.currentStreak >= 7 && (
+            <View style={styles.streakBadge}>
+              <Feather name="award" size={16} color={Colors.dark.text} />
+            </View>
+          )}
         </LinearGradient>
       </View>
 
       {todayWorkout && todayWorkout.completed ? (
         <View style={styles.card}>
-          <ThemedText style={styles.cardTitle}>Treino de Hoje Completo!</ThemedText>
+          <View style={styles.cardHeader}>
+            <Feather name="check-circle" size={24} color={Colors.dark.success} />
+            <ThemedText style={styles.cardTitle}>Treino de Hoje Completo!</ThemedText>
+          </View>
           <View style={styles.completedInfo}>
-            <Feather name="check-circle" size={48} color={Colors.dark.success} />
-            <ThemedText style={styles.completedText}>
-              Você ganhou {todayWorkout.points} pontos!
-            </ThemedText>
+            <View style={styles.completedStats}>
+              <View style={styles.completedStat}>
+                <Feather name="zap" size={20} color={Colors.dark.primary} />
+                <ThemedText style={styles.completedStatValue}>{todayWorkout.points}</ThemedText>
+                <ThemedText style={styles.completedStatLabel}>pontos</ThemedText>
+              </View>
+              <View style={styles.completedStat}>
+                <Feather name="activity" size={20} color={Colors.dark.primary} />
+                <ThemedText style={styles.completedStatValue}>{todayWorkout.exercises.length}</ThemedText>
+                <ThemedText style={styles.completedStatLabel}>exercícios</ThemedText>
+              </View>
+              <View style={styles.completedStat}>
+                <Feather name="clock" size={20} color={Colors.dark.primary} />
+                <ThemedText style={styles.completedStatValue}>{todayWorkout.duration}</ThemedText>
+                <ThemedText style={styles.completedStatLabel}>minutos</ThemedText>
+              </View>
+            </View>
           </View>
         </View>
       ) : (
         <View style={styles.card}>
-          <ThemedText style={styles.cardTitle}>Treino do Dia</ThemedText>
+          <View style={styles.cardHeader}>
+            <Feather name="calendar" size={24} color={Colors.dark.primary} />
+            <ThemedText style={styles.cardTitle}>Treino do Dia</ThemedText>
+          </View>
           <View style={styles.workoutInfo}>
             <InfoRow icon="activity" label="Exercícios" value="6" />
             <InfoRow icon="clock" label="Tempo" value={`${user?.timeAvailable || 30} min`} />
@@ -104,6 +130,7 @@ export default function HomeScreen() {
               end={{ x: 1, y: 1 }}
               style={styles.buttonGradient}
             >
+              <Feather name="play" size={20} color={Colors.dark.buttonText} style={{ marginRight: Spacing.sm }} />
               <ThemedText style={styles.buttonText}>Iniciar Treino</ThemedText>
             </LinearGradient>
           </Pressable>
@@ -111,19 +138,25 @@ export default function HomeScreen() {
       )}
 
       <View style={styles.card}>
-        <ThemedText style={styles.cardTitle}>Resumo de Pontos</ThemedText>
+        <View style={styles.cardHeader}>
+          <Feather name="bar-chart-2" size={24} color={Colors.dark.primary} />
+          <ThemedText style={styles.cardTitle}>Resumo de Pontos</ThemedText>
+        </View>
         <View style={styles.statsGrid}>
-          <StatCard label="Pontos Semanais" value={stats.weeklyPoints.toString()} />
-          <StatCard label="Total de Pontos" value={stats.totalPoints.toString()} />
+          <StatCard icon="calendar" label="Pontos Semanais" value={stats.weeklyPoints.toString()} />
+          <StatCard icon="award" label="Total de Pontos" value={stats.totalPoints.toString()} />
         </View>
       </View>
 
       <View style={styles.card}>
-        <ThemedText style={styles.cardTitle}>Estatísticas Rápidas</ThemedText>
+        <View style={styles.cardHeader}>
+          <Feather name="trending-up" size={24} color={Colors.dark.primary} />
+          <ThemedText style={styles.cardTitle}>Estatísticas</ThemedText>
+        </View>
         <View style={styles.quickStats}>
-          <QuickStat icon="activity" label="Treinos Totais" value={stats.totalWorkouts.toString()} />
-          <QuickStat icon="award" label="Pontos Totais" value={stats.totalPoints.toString()} />
-          <QuickStat icon="trending-up" label="Sequência" value={`${stats.currentStreak} dias`} />
+          <QuickStat icon="activity" label="Treinos" value={stats.totalWorkouts.toString()} />
+          <QuickStat icon="zap" label="Pontos" value={stats.totalPoints.toString()} />
+          <QuickStat icon="flame" label="Sequência" value={`${stats.currentStreak}`} />
         </View>
       </View>
 
@@ -134,6 +167,7 @@ export default function HomeScreen() {
         ]}
         onPress={handleViewWorkouts}
       >
+        <Feather name="list" size={18} color={Colors.dark.primary} style={{ marginRight: Spacing.sm }} />
         <ThemedText style={styles.secondaryButtonText}>Ver Histórico de Treinos</ThemedText>
       </Pressable>
     </ScreenScrollView>
@@ -152,9 +186,12 @@ function InfoRow({ icon, label, value }: { icon: string; label: string; value: s
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
     <View style={styles.statCard}>
+      <View style={styles.statIconContainer}>
+        <Feather name={icon as any} size={20} color={Colors.dark.primary} />
+      </View>
       <ThemedText style={styles.statValue}>{value}</ThemedText>
       <ThemedText style={styles.statLabel}>{label}</ThemedText>
     </View>
@@ -164,9 +201,11 @@ function StatCard({ label, value }: { label: string; value: string }) {
 function QuickStat({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
     <View style={styles.quickStat}>
-      <Feather name={icon as any} size={24} color={Colors.dark.primary} />
-      <ThemedText style={styles.quickStatLabel}>{label}</ThemedText>
+      <View style={styles.quickStatIconContainer}>
+        <Feather name={icon as any} size={24} color={Colors.dark.primary} />
+      </View>
       <ThemedText style={styles.quickStatValue}>{value}</ThemedText>
+      <ThemedText style={styles.quickStatLabel}>{label}</ThemedText>
     </View>
   );
 }
@@ -176,56 +215,99 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   streakCard: {
-    marginBottom: Spacing.md,
-    borderRadius: BorderRadius.md,
+    marginBottom: Spacing.xl,
+    borderRadius: BorderRadius.lg,
     overflow: "hidden",
   },
   streakGradient: {
-    padding: Spacing.lg,
+    padding: Spacing.xl,
     flexDirection: "row",
     alignItems: "center",
-    gap: Spacing.md,
+    gap: Spacing.lg,
+  },
+  streakIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   streakContent: {
     flex: 1,
   },
   streakNumber: {
     ...Typography.h1,
-    fontSize: 36,
+    fontSize: 40,
+    fontWeight: "700",
+    marginBottom: Spacing.xs,
   },
   streakLabel: {
     ...Typography.body,
-    color: Colors.dark.textSecondary,
+    color: Colors.dark.text,
+    opacity: 0.9,
+  },
+  streakBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   card: {
     backgroundColor: Colors.dark.backgroundDefault,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
-    marginBottom: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.xl,
+    marginBottom: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.dark.border,
   },
-  cardTitle: {
-    ...Typography.h3,
-    marginBottom: Spacing.md,
-  },
-  completedInfo: {
+  cardHeader: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingVertical: Spacing.lg,
-    gap: Spacing.md,
-  },
-  completedText: {
-    ...Typography.bodyLarge,
-    color: Colors.dark.success,
-  },
-  workoutInfo: {
     gap: Spacing.md,
     marginBottom: Spacing.lg,
+  },
+  cardTitle: {
+    ...Typography.h3,
+    flex: 1,
+  },
+  completedInfo: {
+    paddingVertical: Spacing.md,
+  },
+  completedStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    gap: Spacing.md,
+  },
+  completedStat: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    gap: Spacing.sm,
+  },
+  completedStatValue: {
+    ...Typography.h2,
+    color: Colors.dark.primary,
+  },
+  completedStatLabel: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+  },
+  workoutInfo: {
+    gap: Spacing.lg,
+    marginBottom: Spacing.xl,
   },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.sm,
   },
   infoContent: {
     flex: 1,
@@ -247,13 +329,22 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     backgroundColor: Colors.dark.backgroundSecondary,
-    padding: Spacing.md,
-    borderRadius: BorderRadius.sm,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
     alignItems: "center",
+    gap: Spacing.sm,
+  },
+  statIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.dark.backgroundTertiary,
+    alignItems: "center",
+    justifyContent: "center",
   },
   statValue: {
     ...Typography.h2,
-    marginBottom: Spacing.xs,
+    color: Colors.dark.primary,
   },
   statLabel: {
     ...Typography.caption,
@@ -263,19 +354,32 @@ const styles = StyleSheet.create({
   quickStats: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingVertical: Spacing.md,
+    gap: Spacing.md,
   },
   quickStat: {
+    flex: 1,
     alignItems: "center",
-    gap: Spacing.xs,
+    backgroundColor: Colors.dark.backgroundSecondary,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    gap: Spacing.sm,
+  },
+  quickStatIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.dark.backgroundTertiary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quickStatValue: {
+    ...Typography.h3,
+    fontWeight: "700",
+    color: Colors.dark.text,
   },
   quickStatLabel: {
     ...Typography.caption,
     color: Colors.dark.textSecondary,
-  },
-  quickStatValue: {
-    ...Typography.bodyLarge,
-    fontWeight: "600",
   },
   primaryButton: {
     height: Spacing.buttonHeight,
@@ -287,6 +391,7 @@ const styles = StyleSheet.create({
   },
   buttonGradient: {
     flex: 1,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -298,12 +403,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dark.backgroundSecondary,
     height: Spacing.buttonHeight,
     borderRadius: BorderRadius.xl,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
   },
   secondaryButtonText: {
     ...Typography.button,
-    color: Colors.dark.textSecondary,
+    color: Colors.dark.primary,
   },
 });

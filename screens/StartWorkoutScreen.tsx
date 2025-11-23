@@ -148,7 +148,10 @@ export default function StartWorkoutScreen() {
 
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.xl }]}>
         <View style={styles.progressCard}>
-          <ThemedText style={styles.progressTitle}>Progresso</ThemedText>
+          <View style={styles.progressHeader}>
+            <Feather name="target" size={20} color={Colors.dark.primary} />
+            <ThemedText style={styles.progressTitle}>Progresso do Treino</ThemedText>
+          </View>
           <View style={styles.progressBar}>
             <View
               style={[
@@ -157,16 +160,30 @@ export default function StartWorkoutScreen() {
               ]}
             />
           </View>
-          <ThemedText style={styles.progressText}>
-            {completedCount} de {exercises.length} exercícios completados
-          </ThemedText>
+          <View style={styles.progressStats}>
+            <View style={styles.progressStat}>
+              <Feather name="check-circle" size={16} color={Colors.dark.success} />
+              <ThemedText style={styles.progressText}>
+                {completedCount}/{exercises.length} exercícios
+              </ThemedText>
+            </View>
+            <ThemedText style={styles.progressPercentage}>
+              {Math.round((completedCount / exercises.length) * 100)}%
+            </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.exercisesHeader}>
+          <Feather name="list" size={20} color={Colors.dark.primary} />
+          <ThemedText style={styles.exercisesTitle}>Exercícios</ThemedText>
         </View>
 
         <View style={styles.exercisesList}>
-          {exercises.map((exercise) => (
+          {exercises.map((exercise, index) => (
             <ExerciseCard
               key={exercise.id}
               exercise={exercise}
+              index={index + 1}
               onToggle={toggleExercise}
             />
           ))}
@@ -187,8 +204,14 @@ export default function StartWorkoutScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.buttonGradient}
           >
+            <Feather 
+              name={allCompleted ? "check-circle" : "lock"} 
+              size={20} 
+              color={allCompleted ? Colors.dark.buttonText : Colors.dark.textTertiary} 
+              style={{ marginRight: Spacing.sm }} 
+            />
             <ThemedText style={[styles.buttonText, !allCompleted && styles.buttonTextDisabled]}>
-              Finalizar Treino
+              {allCompleted ? "Finalizar Treino" : "Complete todos os exercícios"}
             </ThemedText>
           </LinearGradient>
         </Pressable>
@@ -199,9 +222,11 @@ export default function StartWorkoutScreen() {
 
 function ExerciseCard({
   exercise,
+  index,
   onToggle,
 }: {
   exercise: Exercise;
+  index: number;
   onToggle: (id: string) => void;
 }) {
   return (
@@ -210,9 +235,11 @@ function ExerciseCard({
       onPress={() => onToggle(exercise.id)}
     >
       <View style={styles.exerciseHeader}>
-        <View style={styles.checkbox}>
-          {exercise.completed && (
-            <Feather name="check" size={18} color={Colors.dark.success} />
+        <View style={[styles.checkbox, exercise.completed && styles.checkboxCompleted]}>
+          {exercise.completed ? (
+            <Feather name="check" size={20} color={Colors.dark.success} />
+          ) : (
+            <ThemedText style={styles.exerciseNumber}>{index}</ThemedText>
           )}
         </View>
         <View style={styles.exerciseInfo}>
@@ -224,9 +251,20 @@ function ExerciseCard({
           >
             {exercise.name}
           </ThemedText>
-          <ThemedText style={styles.exerciseDetails}>
-            {exercise.sets} séries × {exercise.reps} reps • {exercise.rest}s descanso
-          </ThemedText>
+          <View style={styles.exerciseDetailsRow}>
+            <View style={styles.exerciseDetailItem}>
+              <Feather name="repeat" size={14} color={Colors.dark.textSecondary} />
+              <ThemedText style={styles.exerciseDetails}>
+                {exercise.sets} × {exercise.reps}
+              </ThemedText>
+            </View>
+            <View style={styles.exerciseDetailItem}>
+              <Feather name="clock" size={14} color={Colors.dark.textSecondary} />
+              <ThemedText style={styles.exerciseDetails}>
+                {exercise.rest}s
+              </ThemedText>
+            </View>
+          </View>
         </View>
       </View>
     </Pressable>
@@ -273,39 +311,69 @@ const styles = StyleSheet.create({
   },
   progressCard: {
     backgroundColor: Colors.dark.backgroundDefault,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
-    marginBottom: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.xl,
+    marginBottom: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.dark.border,
   },
+  progressHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
   progressTitle: {
     ...Typography.h3,
-    marginBottom: Spacing.md,
   },
   progressBar: {
-    height: 8,
+    height: 12,
     backgroundColor: Colors.dark.backgroundSecondary,
-    borderRadius: 4,
+    borderRadius: 6,
     overflow: "hidden",
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.md,
   },
   progressFill: {
     height: "100%",
     backgroundColor: Colors.dark.primary,
   },
-  progressText: {
-    ...Typography.caption,
-    color: Colors.dark.textSecondary,
+  progressStats: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  exercisesList: {
+  progressStat: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  progressText: {
+    ...Typography.body,
+    color: Colors.dark.textSecondary,
+    fontWeight: "500",
+  },
+  progressPercentage: {
+    ...Typography.h3,
+    color: Colors.dark.primary,
+    fontWeight: "700",
+  },
+  exercisesHeader: {
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.md,
     marginBottom: Spacing.lg,
   },
+  exercisesTitle: {
+    ...Typography.h3,
+  },
+  exercisesList: {
+    gap: Spacing.lg,
+    marginBottom: Spacing.xl,
+  },
   exerciseCard: {
     backgroundColor: Colors.dark.backgroundDefault,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.xl,
     borderWidth: 2,
     borderColor: Colors.dark.border,
   },
@@ -315,16 +383,27 @@ const styles = StyleSheet.create({
   },
   exerciseHeader: {
     flexDirection: "row",
-    gap: Spacing.md,
+    gap: Spacing.lg,
+    alignItems: "flex-start",
   },
   checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     borderWidth: 2,
     borderColor: Colors.dark.border,
+    backgroundColor: Colors.dark.backgroundSecondary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  checkboxCompleted: {
+    borderColor: Colors.dark.success,
+    backgroundColor: "rgba(78, 205, 196, 0.15)",
+  },
+  exerciseNumber: {
+    ...Typography.bodyLarge,
+    fontWeight: "700",
+    color: Colors.dark.textSecondary,
   },
   exerciseInfo: {
     flex: 1,
@@ -332,11 +411,20 @@ const styles = StyleSheet.create({
   exerciseName: {
     ...Typography.h3,
     fontSize: 18,
-    marginBottom: Spacing.xs,
+    marginBottom: Spacing.md,
   },
   exerciseNameCompleted: {
     color: Colors.dark.textSecondary,
     textDecorationLine: "line-through",
+  },
+  exerciseDetailsRow: {
+    flexDirection: "row",
+    gap: Spacing.lg,
+  },
+  exerciseDetailItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
   },
   exerciseDetails: {
     ...Typography.body,
@@ -356,6 +444,7 @@ const styles = StyleSheet.create({
   },
   buttonGradient: {
     flex: 1,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
