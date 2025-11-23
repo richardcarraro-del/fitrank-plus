@@ -1,83 +1,118 @@
+import { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
-
-const mockRankingData = [
-  { rank: 1, name: "João Silva", points: 12500, avatar: "1" },
-  { rank: 2, name: "Maria Santos", points: 11200, avatar: "2" },
-  { rank: 3, name: "Pedro Oliveira", points: 10800, avatar: "3" },
-  { rank: 4, name: "Ana Costa", points: 9500, avatar: "4" },
-  { rank: 5, name: "Carlos Souza", points: 8700, avatar: "5" },
-  { rank: 6, name: "Juliana Lima", points: 7900, avatar: "6" },
-  { rank: 7, name: "Rafael Martins", points: 7200, avatar: "7" },
-  { rank: 8, name: "Você", points: 6800, avatar: "1", isCurrentUser: true },
-];
+import { useAuth } from "@/hooks/useAuth";
+import { storage, RankingUser } from "@/utils/storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function RankingScreen() {
+  const { user } = useAuth();
+  const [ranking, setRanking] = useState<RankingUser[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadRanking();
+    }, [user])
+  );
+
+  const loadRanking = async () => {
+    try {
+      setLoading(true);
+      const academyId = user?.academy?.id || "1";
+      const rankingData = await storage.getRanking(academyId);
+      setRanking(rankingData);
+    } catch (error) {
+      console.error("Error loading ranking:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const topThree = ranking.slice(0, 3);
+  const [second, first, third] = [topThree[1], topThree[0], topThree[2]].filter(Boolean);
+
+  if (loading) {
+    return (
+      <View style={styles.loading}>
+        <ThemedText>Carregando ranking...</ThemedText>
+      </View>
+    );
+  }
+
   return (
     <ScreenScrollView contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <ThemedText style={styles.academyName}>SmartFit Centro</ThemedText>
+        <ThemedText style={styles.academyName}>{user?.academy?.name || "Minha Academia"}</ThemedText>
         <ThemedText style={styles.period}>Ranking do Mês</ThemedText>
       </View>
 
-      <View style={styles.podium}>
-        <View style={styles.podiumPosition}>
-          <View style={[styles.podiumAvatar, styles.silverAvatar]}>
-            <ThemedText style={styles.avatarText}>2</ThemedText>
-          </View>
-          <ThemedText style={styles.podiumName}>Maria S.</ThemedText>
-          <ThemedText style={styles.podiumPoints}>11.2k</ThemedText>
-          <View style={[styles.podiumRank, { backgroundColor: "#C0C0C0" }]}>
-            <ThemedText style={styles.podiumRankText}>2º</ThemedText>
-          </View>
-        </View>
+      {topThree.length >= 2 && (
+        <View style={styles.podium}>
+          {second && (
+            <View style={styles.podiumPosition}>
+              <View style={[styles.podiumAvatar, styles.silverAvatar]}>
+                <ThemedText style={styles.avatarText}>{second.avatar}</ThemedText>
+              </View>
+              <ThemedText style={styles.podiumName}>{second.name.split(" ")[0]}</ThemedText>
+              <ThemedText style={styles.podiumPoints}>{formatPoints(second.monthlyPoints)}</ThemedText>
+              <View style={[styles.podiumRank, { backgroundColor: "#C0C0C0" }]}>
+                <ThemedText style={styles.podiumRankText}>2º</ThemedText>
+              </View>
+            </View>
+          )}
 
-        <View style={[styles.podiumPosition, styles.firstPlace]}>
-          <View style={[styles.podiumAvatar, styles.goldAvatar]}>
-            <ThemedText style={styles.avatarText}>1</ThemedText>
-          </View>
-          <ThemedText style={styles.podiumName}>João S.</ThemedText>
-          <ThemedText style={styles.podiumPoints}>12.5k</ThemedText>
-          <View style={[styles.podiumRank, { backgroundColor: Colors.dark.premium }]}>
-            <Feather name="award" size={16} color={Colors.dark.backgroundRoot} />
-          </View>
-        </View>
+          {first && (
+            <View style={[styles.podiumPosition, styles.firstPlace]}>
+              <View style={[styles.podiumAvatar, styles.goldAvatar]}>
+                <ThemedText style={styles.avatarText}>{first.avatar}</ThemedText>
+              </View>
+              <ThemedText style={styles.podiumName}>{first.name.split(" ")[0]}</ThemedText>
+              <ThemedText style={styles.podiumPoints}>{formatPoints(first.monthlyPoints)}</ThemedText>
+              <View style={[styles.podiumRank, { backgroundColor: Colors.dark.premium }]}>
+                <Feather name="award" size={16} color={Colors.dark.backgroundRoot} />
+              </View>
+            </View>
+          )}
 
-        <View style={styles.podiumPosition}>
-          <View style={[styles.podiumAvatar, styles.bronzeAvatar]}>
-            <ThemedText style={styles.avatarText}>3</ThemedText>
-          </View>
-          <ThemedText style={styles.podiumName}>Pedro O.</ThemedText>
-          <ThemedText style={styles.podiumPoints}>10.8k</ThemedText>
-          <View style={[styles.podiumRank, { backgroundColor: "#CD7F32" }]}>
-            <ThemedText style={styles.podiumRankText}>3º</ThemedText>
-          </View>
+          {third && (
+            <View style={styles.podiumPosition}>
+              <View style={[styles.podiumAvatar, styles.bronzeAvatar]}>
+                <ThemedText style={styles.avatarText}>{third.avatar}</ThemedText>
+              </View>
+              <ThemedText style={styles.podiumName}>{third.name.split(" ")[0]}</ThemedText>
+              <ThemedText style={styles.podiumPoints}>{formatPoints(third.monthlyPoints)}</ThemedText>
+              <View style={[styles.podiumRank, { backgroundColor: "#CD7F32" }]}>
+                <ThemedText style={styles.podiumRankText}>3º</ThemedText>
+              </View>
+            </View>
+          )}
         </View>
-      </View>
+      )}
 
       <View style={styles.leaderboard}>
         <ThemedText style={styles.leaderboardTitle}>Classificação Completa</ThemedText>
-        {mockRankingData.map((user) => (
+        {ranking.map((rankingUser) => (
           <View
-            key={user.rank}
+            key={rankingUser.id}
             style={[
               styles.leaderboardItem,
-              user.isCurrentUser && styles.currentUserItem,
+              rankingUser.isCurrentUser && styles.currentUserItem,
             ]}
           >
             <View style={styles.leaderboardLeft}>
-              <ThemedText style={styles.rank}>#{user.rank}</ThemedText>
+              <ThemedText style={styles.rank}>#{rankingUser.rank}</ThemedText>
               <View style={styles.avatar}>
-                <ThemedText style={styles.avatarSmallText}>{user.avatar}</ThemedText>
+                <ThemedText style={styles.avatarSmallText}>{rankingUser.avatar}</ThemedText>
               </View>
-              <ThemedText style={styles.userName}>{user.name}</ThemedText>
+              <ThemedText style={styles.userName}>{rankingUser.name}</ThemedText>
             </View>
             <View style={styles.leaderboardRight}>
               <Feather name="zap" size={16} color={Colors.dark.primary} />
-              <ThemedText style={styles.userPoints}>{user.points.toLocaleString()}</ThemedText>
+              <ThemedText style={styles.userPoints}>{rankingUser.monthlyPoints.toLocaleString()}</ThemedText>
             </View>
           </View>
         ))}
@@ -86,7 +121,19 @@ export default function RankingScreen() {
   );
 }
 
+function formatPoints(points: number): string {
+  if (points >= 1000) {
+    return `${(points / 1000).toFixed(1)}k`;
+  }
+  return points.toString();
+}
+
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   content: {
     paddingHorizontal: Spacing.lg,
   },

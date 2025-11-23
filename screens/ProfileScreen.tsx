@@ -1,15 +1,54 @@
-import { StyleSheet, View, Alert, Pressable } from "react-native";
+import { useState, useCallback } from "react";
+import { StyleSheet, View, Alert, Pressable, Modal, FlatList } from "react-native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { useAuth } from "@/hooks/useAuth";
 import { Colors, Spacing, BorderRadius, Typography } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { storage, UserStats, Academy, Achievement } from "@/utils/storage";
 
 export default function ProfileScreen() {
   const { user, logout, updateProfile } = useAuth();
   const navigation = useNavigation();
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [academies, setAcademies] = useState<Academy[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [showAcademyModal, setShowAcademyModal] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true;
+      
+      const loadDataSafely = async () => {
+        const userStats = await storage.getUserStats();
+        const academyList = await storage.getAcademies();
+        const achievementList = await storage.getAchievements();
+        
+        if (isMounted) {
+          setStats(userStats);
+          setAcademies(academyList);
+          setAchievements(achievementList);
+        }
+      };
+      
+      loadDataSafely();
+      
+      return () => {
+        isMounted = false;
+      };
+    }, [])
+  );
+
+  const loadData = async () => {
+    const userStats = await storage.getUserStats();
+    const academyList = await storage.getAcademies();
+    const achievementList = await storage.getAchievements();
+    setStats(userStats);
+    setAcademies(academyList);
+    setAchievements(achievementList);
+  };
 
   const handleLogout = () => {
     Alert.alert("Sair", "Tem certeza que deseja sair da sua conta?", [
@@ -28,18 +67,26 @@ export default function ProfileScreen() {
   const handleUpgradeToPremium = () => {
     Alert.alert(
       "FitRank+ Premium",
-      "Desbloqueie todos os recursos:\n\n• Treinos ilimitados\n• Treinos avançados\n• Dietas automatizadas\n• Histórico completo\n• Sem anúncios\n\nApenas R$ 29,90/mês",
+      "Desbloqueie todos os recursos:\n\n• Treinos ilimitados\n• Treinos avançados personalizados\n• Histórico completo de treinos\n• Sem anúncios\n• Suporte prioritário\n\nApenas R$ 29,90/mês",
       [
         { text: "Cancelar", style: "cancel" },
         {
           text: "Assinar Agora",
           onPress: async () => {
             await updateProfile({ isPremium: true });
-            Alert.alert("Sucesso!", "Você agora é Premium!");
+            await loadData();
+            Alert.alert("Sucesso!", "Você agora é Premium! Aproveite seus treinos ilimitados.");
           },
         },
       ]
     );
+  };
+
+  const handleSelectAcademy = async (academy: Academy) => {
+    await updateProfile({ academy });
+    await loadData();
+    setShowAcademyModal(false);
+    Alert.alert("Academia atualizada", `Agora você faz parte de ${academy.name}!`);
   };
 
   if (!user) {
@@ -100,20 +147,92 @@ export default function ProfileScreen() {
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
             <Feather name="zap" size={24} color={Colors.dark.primary} />
-            <ThemedText style={styles.statValue}>6,800</ThemedText>
+            <ThemedText style={styles.statValue}>{stats?.totalPoints.toLocaleString() || "0"}</ThemedText>
             <ThemedText style={styles.statLabel}>Pontos</ThemedText>
           </View>
           <View style={styles.statCard}>
             <Feather name="activity" size={24} color={Colors.dark.primary} />
-            <ThemedText style={styles.statValue}>24</ThemedText>
+            <ThemedText style={styles.statValue}>{stats?.totalWorkouts || "0"}</ThemedText>
             <ThemedText style={styles.statLabel}>Treinos</ThemedText>
           </View>
           <View style={styles.statCard}>
             <Feather name="trending-up" size={24} color={Colors.dark.primary} />
-            <ThemedText style={styles.statValue}>7</ThemedText>
+            <ThemedText style={styles.statValue}>{stats?.currentStreak || "0"}</ThemedText>
             <ThemedText style={styles.statLabel}>Sequência</ThemedText>
           </View>
+          <View style={styles.statCard}>
+            <Feather name="award" size={24} color={Colors.dark.primary} />
+            <ThemedText style={styles.statValue}>{stats?.bestStreak || "0"}</ThemedText>
+            <ThemedText style={styles.statLabel}>Melhor Seq.</ThemedText>
+          </View>
         </View>
+      </View>
+
+      <View style={styles.section}>
+        <ThemedText style={styles.sectionTitle}>Conquistas</ThemedText>
+        <View style={styles.achievementsGrid}>
+          {achievements.slice(0, 6).map((achievement) => (
+            <View
+              key={achievement.id}
+              style={[
+                styles.achievementCard,
+                !achievement.earned && styles.achievementLocked,
+              ]}
+            >
+              <View style={styles.achievementIcon}>
+                {achievement.earned ? (
+                  <Feather name="award" size={24} color={Colors.dark.premium} />
+                ) : (
+                  <Feather name="lock" size={24} color={Colors.dark.textTertiary} />
+                )}
+              </View>
+              <ThemedText style={[
+                styles.achievementName,
+                !achievement.earned && styles.achievementLockedText,
+              ]}>
+                {achievement.name}
+              </ThemedText>
+              <ThemedText style={styles.achievementDesc}>
+                {achievement.description}
+              </ThemedText>
+              {achievement.earned && achievement.earnedDate && (
+                <ThemedText style={styles.achievementDate}>
+                  {new Date(achievement.earnedDate).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "short",
+                  })}
+                </ThemedText>
+              )}
+            </View>
+          ))}
+        </View>
+        <ThemedText style={styles.achievementsSummary}>
+          {achievements.filter(a => a.earned).length} de {achievements.length} conquistas desbloqueadas
+        </ThemedText>
+      </View>
+
+      <View style={styles.section}>
+        <ThemedText style={styles.sectionTitle}>Academia</ThemedText>
+        <Pressable
+          style={({ pressed }) => [
+            styles.academyCard,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={() => setShowAcademyModal(true)}
+        >
+          <View style={styles.academyInfo}>
+            <Feather name="home" size={20} color={Colors.dark.primary} />
+            <View style={{ flex: 1 }}>
+              <ThemedText style={styles.academyName}>
+                {user.academy?.name || "Selecionar Academia"}
+              </ThemedText>
+              {user.academy?.address && (
+                <ThemedText style={styles.academyAddress}>{user.academy.address}</ThemedText>
+              )}
+            </View>
+          </View>
+          <Feather name="chevron-right" size={20} color={Colors.dark.textTertiary} />
+        </Pressable>
       </View>
 
       <View style={styles.section}>
@@ -131,6 +250,49 @@ export default function ProfileScreen() {
           />
         </View>
       </View>
+
+      <Modal
+        visible={showAcademyModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowAcademyModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>Selecionar Academia</ThemedText>
+              <Pressable onPress={() => setShowAcademyModal(false)}>
+                <Feather name="x" size={24} color={Colors.dark.text} />
+              </Pressable>
+            </View>
+            <FlatList
+              data={academies}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.academyItem,
+                    pressed && styles.buttonPressed,
+                    item.id === user.academy?.id && styles.academyItemSelected,
+                  ]}
+                  onPress={() => handleSelectAcademy(item)}
+                >
+                  <View style={{ flex: 1 }}>
+                    <ThemedText style={styles.academyItemName}>{item.name}</ThemedText>
+                    <ThemedText style={styles.academyItemAddress}>{item.address}</ThemedText>
+                    <ThemedText style={styles.academyItemMembers}>
+                      {item.memberCount} membros
+                    </ThemedText>
+                  </View>
+                  {item.id === user.academy?.id && (
+                    <Feather name="check" size={20} color={Colors.dark.success} />
+                  )}
+                </Pressable>
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
     </ScreenScrollView>
   );
 }
@@ -298,5 +460,124 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     opacity: 0.8,
+  },
+  academyCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: Colors.dark.backgroundDefault,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
+  },
+  academyInfo: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+  },
+  academyName: {
+    ...Typography.bodyLarge,
+    fontWeight: "600",
+    marginBottom: 2,
+  },
+  academyAddress: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: Colors.dark.backgroundRoot,
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
+    paddingTop: Spacing.lg,
+    maxHeight: "80%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.lg,
+  },
+  modalTitle: {
+    ...Typography.h2,
+  },
+  academyItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.dark.border,
+  },
+  academyItemSelected: {
+    backgroundColor: Colors.dark.backgroundSecondary,
+  },
+  academyItemName: {
+    ...Typography.bodyLarge,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  academyItemAddress: {
+    ...Typography.body,
+    color: Colors.dark.textSecondary,
+    marginBottom: 2,
+  },
+  academyItemMembers: {
+    ...Typography.caption,
+    color: Colors.dark.textTertiary,
+  },
+  achievementsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: Spacing.md,
+    marginBottom: Spacing.md,
+  },
+  achievementCard: {
+    width: "48%",
+    backgroundColor: Colors.dark.backgroundDefault,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
+    borderColor: Colors.dark.premium,
+    alignItems: "center",
+  },
+  achievementLocked: {
+    borderColor: Colors.dark.border,
+    opacity: 0.6,
+  },
+  achievementIcon: {
+    marginBottom: Spacing.sm,
+  },
+  achievementName: {
+    ...Typography.caption,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  achievementLockedText: {
+    color: Colors.dark.textTertiary,
+  },
+  achievementDesc: {
+    ...Typography.caption,
+    fontSize: 10,
+    color: Colors.dark.textSecondary,
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  achievementDate: {
+    ...Typography.caption,
+    fontSize: 9,
+    color: Colors.dark.premium,
+  },
+  achievementsSummary: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+    textAlign: "center",
   },
 });

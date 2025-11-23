@@ -87,6 +87,8 @@ export default function StartWorkoutScreen() {
     const workout: Workout = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
+      startTime: startTime.toISOString(),
+      endTime: new Date().toISOString(),
       exercises,
       duration,
       points,
@@ -94,39 +96,20 @@ export default function StartWorkoutScreen() {
       calories,
     };
 
-    await storage.saveWorkout(workout);
+    await storage.completeWorkout(workout);
+    
+    const updatedStats = await storage.getUserStats();
+    const newlyUnlocked = await storage.checkAndUnlockAchievements(updatedStats);
 
-    const today = new Date().toDateString();
-    const lastWorkoutDate = stats.lastWorkoutDate
-      ? new Date(stats.lastWorkoutDate).toDateString()
-      : null;
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayString = yesterday.toDateString();
-
-    let newStreak = stats.currentStreak;
-    if (lastWorkoutDate === today) {
-      newStreak = stats.currentStreak;
-    } else if (lastWorkoutDate === yesterdayString) {
-      newStreak = stats.currentStreak + 1;
-    } else {
-      newStreak = 1;
+    let message = `Treino completo!\n\nVocê ganhou ${points} pontos\nQueimou ~${calories} calorias\nSequência: ${updatedStats.currentStreak} dias`;
+    
+    if (newlyUnlocked.length > 0) {
+      message += `\n\nNova conquista desbloqueada:\n${newlyUnlocked[0].name}`;
     }
-
-    await storage.updateUserStats({
-      totalWorkouts: stats.totalWorkouts + 1,
-      totalPoints: stats.totalPoints + points,
-      currentStreak: newStreak,
-      bestStreak: Math.max(newStreak, stats.bestStreak),
-      weeklyPoints: stats.weeklyPoints + points,
-      monthlyPoints: stats.monthlyPoints + points,
-      lastWorkoutDate: new Date().toISOString(),
-    });
 
     Alert.alert(
       "Parabéns!",
-      `Treino completo!\n\nVocê ganhou ${points} pontos\nQueimou ~${calories} calorias\nSequência: ${newStreak} dias`,
+      message,
       [{ text: "OK", onPress: () => navigation.navigate("Main" as never) }]
     );
   };

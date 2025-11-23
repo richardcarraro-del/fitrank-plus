@@ -109,17 +109,71 @@ export function generateWorkout(user: User): Exercise[] {
   
   const exercises = exerciseDatabase[level][goal] || exerciseDatabase.beginner.health;
   
-  let selectedExercises: Exercise[] = [];
-  const exerciseCount = timeAvailable >= 60 ? 6 : timeAvailable >= 45 ? 5 : 4;
+  let exerciseCount = timeAvailable >= 60 ? 6 : timeAvailable >= 45 ? 5 : 4;
   
-  const shuffled = [...exercises].sort(() => Math.random() - 0.5);
-  selectedExercises = shuffled.slice(0, exerciseCount);
+  if (level === "advanced" && timeAvailable >= 60) {
+    exerciseCount = 7;
+  } else if (level === "beginner" && timeAvailable < 30) {
+    exerciseCount = 3;
+  }
+  
+  const dayOfWeek = new Date().getDay();
+  const seed = user.name.length + dayOfWeek;
+  
+  const shuffled = [...exercises].sort((a, b) => {
+    const hashA = (a.name.charCodeAt(0) * seed) % 100;
+    const hashB = (b.name.charCodeAt(0) * seed) % 100;
+    return hashA - hashB;
+  });
+  
+  let selectedExercises = shuffled.slice(0, Math.min(exerciseCount, exercises.length));
+  
+  if (goal === "muscle" && selectedExercises.length > 1) {
+    const firstExercise = selectedExercises[0];
+    selectedExercises = selectedExercises.slice(1);
+    selectedExercises.push(firstExercise);
+  }
+  
+  selectedExercises = selectedExercises.map((ex) => {
+    const adjustedExercise = { ...ex };
+    
+    if (level === "beginner") {
+      adjustedExercise.sets = Math.max(2, ex.sets - 1);
+      adjustedExercise.reps = Math.max(8, ex.reps - 2);
+      adjustedExercise.rest = ex.rest + 15;
+    } else if (level === "advanced") {
+      adjustedExercise.sets = ex.sets + 1;
+      adjustedExercise.reps = Math.min(20, ex.reps + 2);
+      adjustedExercise.rest = Math.max(30, ex.rest - 15);
+    }
+    
+    if (goal === "lose_weight") {
+      adjustedExercise.rest = Math.max(20, adjustedExercise.rest - 10);
+    } else if (goal === "muscle") {
+      adjustedExercise.rest = adjustedExercise.rest + 15;
+    }
+    
+    return adjustedExercise;
+  });
   
   return selectedExercises.map((ex, idx) => ({
     ...ex,
     id: `${Date.now()}-${idx}`,
     completed: false,
+    muscleGroup: inferMuscleGroup(ex.name),
   }));
+}
+
+function inferMuscleGroup(exerciseName: string): string {
+  const lower = exerciseName.toLowerCase();
+  if (lower.includes("supino") || lower.includes("flexão") || lower.includes("peit")) return "Peito";
+  if (lower.includes("costa") || lower.includes("remada") || lower.includes("puxada")) return "Costas";
+  if (lower.includes("agachamento") || lower.includes("leg") || lower.includes("perna")) return "Pernas";
+  if (lower.includes("ombro") || lower.includes("desenvolvimento") || lower.includes("militar")) return "Ombros";
+  if (lower.includes("bíceps") || lower.includes("rosca")) return "Bíceps";
+  if (lower.includes("tríceps")) return "Tríceps";
+  if (lower.includes("abdominal") || lower.includes("prancha")) return "Core";
+  return "Corpo inteiro";
 }
 
 export function calculateWorkoutPoints(

@@ -14,27 +14,33 @@ export default function WorkoutScreen() {
   const { user } = useAuth();
   const navigation = useNavigation();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [todayWorkoutCount, setTodayWorkoutCount] = useState(0);
-  const FREE_LIMIT = 3;
+  const [canGenerate, setCanGenerate] = useState(true);
+  const [remaining, setRemaining] = useState(2);
+  const FREE_WEEKLY_LIMIT = 2;
 
   useFocusEffect(
     useCallback(() => {
       loadWorkouts();
-    }, [])
+      checkGenerationLimit();
+    }, [user?.isPremium])
   );
 
   const loadWorkouts = async () => {
     const allWorkouts = await storage.getWorkouts();
     setWorkouts(allWorkouts);
-    const count = await storage.getTodayWorkoutCount();
-    setTodayWorkoutCount(count);
+  };
+
+  const checkGenerationLimit = async () => {
+    const limit = await storage.canGenerateWorkout(user?.isPremium || false);
+    setCanGenerate(limit.canGenerate);
+    setRemaining(limit.remaining);
   };
 
   const handleGenerateWorkout = async () => {
-    if (!user?.isPremium && todayWorkoutCount >= FREE_LIMIT) {
+    if (!canGenerate && !user?.isPremium) {
       Alert.alert(
-        "Limite Atingido",
-        "Você atingiu o limite de treinos gratuitos de hoje. Assine o Premium para treinos ilimitados!",
+        "Limite Semanal Atingido",
+        "Você atingiu o limite de 2 treinos semanais gratuitos. Assine o Premium por R$ 29,90/mês para treinos ilimitados!",
         [
           { text: "Cancelar", style: "cancel" },
           { text: "Ver Premium", onPress: () => navigation.navigate("ProfileTab" as never) },
@@ -46,7 +52,6 @@ export default function WorkoutScreen() {
     if (!user) return;
 
     const exercises = generateWorkout(user);
-    await storage.incrementTodayWorkoutCount();
     
     navigation.navigate("StartWorkoutModal" as never, {
       exercises,
@@ -66,21 +71,21 @@ export default function WorkoutScreen() {
           <ThemedText style={styles.generateTitle}>Gerar Novo Treino</ThemedText>
           {!user?.isPremium && (
             <ThemedText style={styles.generateLimit}>
-              {todayWorkoutCount}/{FREE_LIMIT} treinos gratuitos hoje
+              {remaining} de {FREE_WEEKLY_LIMIT} treinos gratuitos restantes esta semana
             </ThemedText>
           )}
           <Pressable
             style={({ pressed }) => [
               styles.generateButton,
               pressed && styles.buttonPressed,
-              !user?.isPremium && todayWorkoutCount >= FREE_LIMIT && styles.buttonDisabled,
+              !canGenerate && !user?.isPremium && styles.buttonDisabled,
             ]}
             onPress={handleGenerateWorkout}
-            disabled={!user?.isPremium && todayWorkoutCount >= FREE_LIMIT}
+            disabled={!canGenerate && !user?.isPremium}
           >
             <ThemedText style={styles.generateButtonText}>
-              {!user?.isPremium && todayWorkoutCount >= FREE_LIMIT
-                ? "Limite Atingido - Upgrade para Premium"
+              {!canGenerate && !user?.isPremium
+                ? "Limite Semanal Atingido - Upgrade para Premium"
                 : "Gerar Treino"}
             </ThemedText>
           </Pressable>
@@ -109,19 +114,25 @@ export default function WorkoutScreen() {
 }
 
 function WorkoutCard({ workout }: { workout: Workout }) {
+  const [expanded, setExpanded] = useState(false);
   const date = new Date(workout.date);
   const formattedDate = date.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "short",
+    year: "numeric",
+    weekday: "short",
   });
 
   return (
-    <View style={styles.workoutCard}>
+    <Pressable
+      style={styles.workoutCard}
+      onPress={() => setExpanded(!expanded)}
+    >
       <View style={styles.workoutHeader}>
-        <View>
+        <View style={{ flex: 1 }}>
           <ThemedText style={styles.workoutDate}>{formattedDate}</ThemedText>
           <ThemedText style={styles.workoutDetails}>
-            {workout.exercises.length} exercícios • {workout.duration} min
+            {workout.exercises.length} exercícios • {workout.duration} min • {workout.calories} cal
           </ThemedText>
         </View>
         {workout.completed && (
@@ -131,13 +142,35 @@ function WorkoutCard({ workout }: { workout: Workout }) {
           </View>
         )}
       </View>
-      {workout.completed && (
-        <View style={styles.completedBadge}>
-          <Feather name="check-circle" size={16} color={Colors.dark.success} />
-          <ThemedText style={styles.completedText}>Completo</ThemedText>
+      
+      {expanded && (
+        <View style={styles.exercisesExpanded}>
+          <ThemedText style={styles.expandedTitle}>Exercícios:</ThemedText>
+          {workout.exercises.map((exercise, index) => (
+            <View key={exercise.id} style={styles.exerciseItem}>
+              <ThemedText style={styles.exerciseNumber}>{index + 1}.</ThemedText>
+              <View style={{ flex: 1 }}>
+                <ThemedText style={styles.exerciseItemName}>{exercise.name}</ThemedText>
+                <ThemedText style={styles.exerciseItemDetails}>
+                  {exercise.sets} × {exercise.reps} reps • {exercise.rest}s descanso
+                </ThemedText>
+              </View>
+              {exercise.completed && (
+                <Feather name="check" size={16} color={Colors.dark.success} />
+              )}
+            </View>
+          ))}
         </View>
       )}
-    </View>
+      
+      <View style={styles.expandIndicator}>
+        <Feather
+          name={expanded ? "chevron-up" : "chevron-down"}
+          size={20}
+          color={Colors.dark.textSecondary}
+        />
+      </View>
+    </Pressable>
   );
 }
 
@@ -247,5 +280,42 @@ const styles = StyleSheet.create({
   completedText: {
     ...Typography.caption,
     color: Colors.dark.success,
+  },
+  exercisesExpanded: {
+    marginTop: Spacing.md,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: Colors.dark.border,
+  },
+  expandedTitle: {
+    ...Typography.caption,
+    fontWeight: "600",
+    color: Colors.dark.textSecondary,
+    marginBottom: Spacing.sm,
+    textTransform: "uppercase",
+  },
+  exerciseItem: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    alignItems: "flex-start",
+  },
+  exerciseNumber: {
+    ...Typography.caption,
+    color: Colors.dark.textTertiary,
+    width: 20,
+  },
+  exerciseItemName: {
+    ...Typography.body,
+    fontWeight: "500",
+    marginBottom: 2,
+  },
+  exerciseItemDetails: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+  },
+  expandIndicator: {
+    alignItems: "center",
+    marginTop: Spacing.sm,
   },
 });
