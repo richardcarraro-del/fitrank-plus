@@ -1,31 +1,15 @@
-import { useCallback } from "react";
 import { StyleSheet, View, Alert, Pressable } from "react-native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { useAuth } from "@/hooks/useAuth";
-import { storage } from "@/utils/storage";
 import { Colors, Spacing, BorderRadius, Typography } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "expo-image";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const { user, logout, updateProfile } = useAuth();
   const navigation = useNavigation();
-  const [achievements, setAchievements] = useState<any[]>([]);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadAchievements();
-    }, [])
-  );
-
-  const loadAchievements = async () => {
-    const userAchievements = await storage.getAchievements();
-    setAchievements(userAchievements);
-  };
 
   const handleLogout = () => {
     Alert.alert("Sair", "Tem certeza que deseja sair da sua conta?", [
@@ -112,19 +96,23 @@ export default function ProfileScreen() {
       )}
 
       <View style={styles.section}>
-        <ThemedText style={styles.sectionTitle}>Conquistas</ThemedText>
-        <View style={styles.achievementsGrid}>
-          {achievements.slice(0, 6).map((achievement) => (
-            <View key={achievement.id} style={styles.achievementItem}>
-              <Image
-                source={require(`@/assets/images/badges/${achievement.icon}.png`)}
-                style={[
-                  styles.achievementIcon,
-                  !achievement.earned && styles.achievementIconLocked,
-                ]}
-              />
-            </View>
-          ))}
+        <ThemedText style={styles.sectionTitle}>Estatísticas</ThemedText>
+        <View style={styles.statsGrid}>
+          <View style={styles.statCard}>
+            <Feather name="zap" size={24} color={Colors.dark.primary} />
+            <ThemedText style={styles.statValue}>6,800</ThemedText>
+            <ThemedText style={styles.statLabel}>Pontos</ThemedText>
+          </View>
+          <View style={styles.statCard}>
+            <Feather name="activity" size={24} color={Colors.dark.primary} />
+            <ThemedText style={styles.statValue}>24</ThemedText>
+            <ThemedText style={styles.statLabel}>Treinos</ThemedText>
+          </View>
+          <View style={styles.statCard}>
+            <Feather name="trending-up" size={24} color={Colors.dark.primary} />
+            <ThemedText style={styles.statValue}>7</ThemedText>
+            <ThemedText style={styles.statLabel}>Sequência</ThemedText>
+          </View>
         </View>
       </View>
 
@@ -262,21 +250,27 @@ const styles = StyleSheet.create({
     ...Typography.h3,
     marginBottom: Spacing.md,
   },
-  achievementsGrid: {
+  statsGrid: {
     flexDirection: "row",
-    flexWrap: "wrap",
     gap: Spacing.md,
   },
-  achievementItem: {
-    width: (100 - Spacing.lg * 2 - Spacing.md * 2) / 3,
+  statCard: {
+    flex: 1,
+    backgroundColor: Colors.dark.backgroundDefault,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    alignItems: "center",
+    gap: Spacing.sm,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
   },
-  achievementIcon: {
-    width: "100%",
-    aspectRatio: 1,
-    borderRadius: BorderRadius.sm,
+  statValue: {
+    ...Typography.h2,
+    color: Colors.dark.primary,
   },
-  achievementIconLocked: {
-    opacity: 0.3,
+  statLabel: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
   },
   settingsList: {
     gap: Spacing.xs,
