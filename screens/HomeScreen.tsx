@@ -1,18 +1,20 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
-import { storage, Workout } from "@/utils/storage";
+import { storage, Workout, UserStats } from "@/utils/storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 
+type HomeStats = Pick<UserStats, 'currentStreak' | 'totalWorkouts' | 'totalPoints' | 'weeklyPoints'>;
+
 export default function HomeScreen() {
   const { user } = useAuth();
   const navigation = useNavigation();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<HomeStats>({
     currentStreak: 0,
     totalWorkouts: 0,
     totalPoints: 0,
@@ -22,19 +24,27 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadData();
+      let isMounted = true;
+
+      const loadDataSafely = async () => {
+        const userStats = await storage.getUserStats();
+        const workouts = await storage.getWorkouts();
+        const today = new Date().toDateString();
+        const todaysWorkout = workouts.find(w => new Date(w.date).toDateString() === today);
+
+        if (isMounted) {
+          setStats(userStats);
+          setTodayWorkout(todaysWorkout || null);
+        }
+      };
+
+      loadDataSafely();
+
+      return () => {
+        isMounted = false;
+      };
     }, [])
   );
-
-  const loadData = async () => {
-    const userStats = await storage.getUserStats();
-    setStats(userStats);
-
-    const workouts = await storage.getWorkouts();
-    const today = new Date().toDateString();
-    const todaysWorkout = workouts.find(w => new Date(w.date).toDateString() === today);
-    setTodayWorkout(todaysWorkout || null);
-  };
 
   const handleStartWorkout = () => {
     navigation.navigate("StartWorkoutModal" as never);

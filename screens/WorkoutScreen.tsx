@@ -20,21 +20,26 @@ export default function WorkoutScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadWorkouts();
-      checkGenerationLimit();
+      let isMounted = true;
+
+      const loadDataSafely = async () => {
+        const allWorkouts = await storage.getWorkouts();
+        const limit = await storage.canGenerateWorkout(user?.isPremium || false);
+
+        if (isMounted) {
+          setWorkouts(allWorkouts);
+          setCanGenerate(limit.canGenerate);
+          setRemaining(limit.remaining);
+        }
+      };
+
+      loadDataSafely();
+
+      return () => {
+        isMounted = false;
+      };
     }, [user?.isPremium])
   );
-
-  const loadWorkouts = async () => {
-    const allWorkouts = await storage.getWorkouts();
-    setWorkouts(allWorkouts);
-  };
-
-  const checkGenerationLimit = async () => {
-    const limit = await storage.canGenerateWorkout(user?.isPremium || false);
-    setCanGenerate(limit.canGenerate);
-    setRemaining(limit.remaining);
-  };
 
   const handleGenerateWorkout = async () => {
     if (!canGenerate && !user?.isPremium) {
