@@ -2,7 +2,7 @@ import { View, StyleSheet, Pressable, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useSupabaseAuth";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { ScreenScrollView } from "@/components/ScreenScrollView";

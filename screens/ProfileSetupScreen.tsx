@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable, TextInput, ScrollView } from "react-native
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useSupabaseAuth";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -18,7 +18,7 @@ export default function ProfileSetupScreen() {
   const [weeklyFrequency, setWeeklyFrequency] = useState<2 | 3 | 4 | 5 | 6>(3);
   const [location, setLocation] = useState<"home" | "gym">("gym");
 
-  const { updateProfile } = useAuth();
+  const { updateProfile, setHasCompletedOnboarding } = useAuth();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
@@ -43,13 +43,15 @@ export default function ProfileSetupScreen() {
       goal,
       level,
       age: parseInt(age) || 25,
-      weight: parseInt(weight) || 70,
-      height: parseInt(height) || 170,
+      weight: parseFloat(weight) || 70,
+      height: parseFloat(height) || 170,
       timeAvailable,
       weeklyFrequency,
       location,
       selectedPlan,
     });
+    
+    await setHasCompletedOnboarding(true);
     navigation.navigate("Main" as never);
   };
 

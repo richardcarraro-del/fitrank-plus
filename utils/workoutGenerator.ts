@@ -1,5 +1,5 @@
 import { Exercise } from "./storage";
-import { User } from "@/hooks/useAuth";
+import { User } from "@/types/auth";
 
 type MuscleGroup = 'chest' | 'back' | 'legs' | 'shoulders' | 'biceps' | 'triceps' | 'abs';
 

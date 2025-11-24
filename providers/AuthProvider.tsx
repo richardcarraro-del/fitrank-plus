@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthContext, useAuthState } from "@/hooks/useAuth";
+import { AuthContext, useAuthState } from "@/hooks/useSupabaseAuth";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuthState();

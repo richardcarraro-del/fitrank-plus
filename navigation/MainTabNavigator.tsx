@@ -9,7 +9,7 @@ import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import WorkoutStackNavigator from "@/navigation/WorkoutStackNavigator";
 import RankingStackNavigator from "@/navigation/RankingStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useSupabaseAuth";
 import { Spacing } from "@/constants/theme";
 import { generateWorkout } from "@/utils/workoutGenerator";
 

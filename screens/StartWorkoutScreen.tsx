@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable, Alert, ScrollView } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useSupabaseAuth";
 import { storage, Exercise, Workout } from "@/utils/storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";

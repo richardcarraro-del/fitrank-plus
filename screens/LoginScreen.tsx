@@ -3,10 +3,11 @@ import { View, StyleSheet, Pressable, TextInput, Alert, ScrollView, KeyboardAvoi
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors, Spacing, Typography, BorderRadius } from "@/constants/theme";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useSupabaseAuth";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function LoginScreen() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login, signup, user } = useAuth();
+  const { login, signup, loginWithGoogle, user } = useAuth();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
@@ -62,6 +63,18 @@ export default function LoginScreen() {
     } catch (error: any) {
       const errorMessage = error?.message || "Falha ao autenticar";
       Alert.alert("Erro", errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      await loginWithGoogle();
+      navigation.navigate("Main" as never);
+    } catch (error: any) {
+      Alert.alert("Erro", error?.message || "Falha ao fazer login com Google");
     } finally {
       setLoading(false);
     }
@@ -166,6 +179,30 @@ export default function LoginScreen() {
             </LinearGradient>
           </Pressable>
 
+          {isLogin && (
+            <>
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <ThemedText style={styles.dividerText}>ou</ThemedText>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.googleButton,
+                  pressed && styles.buttonPressed,
+                ]}
+                onPress={handleGoogleSignIn}
+                disabled={loading}
+              >
+                <Feather name="chrome" size={20} color={Colors.dark.text} />
+                <ThemedText style={styles.googleButtonText}>
+                  Continuar com Google
+                </ThemedText>
+              </Pressable>
+            </>
+          )}
+
           <Pressable onPress={() => setIsLogin(!isLogin)}>
             <ThemedText style={styles.switchText}>
               {isLogin ? "Não tem uma conta? Criar conta" : "Já tem uma conta? Entrar"}
@@ -248,5 +285,36 @@ const styles = StyleSheet.create({
     ...Typography.body,
     color: Colors.dark.primary,
     textAlign: "center",
+  },
+  divider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: Spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.dark.border,
+  },
+  dividerText: {
+    ...Typography.caption,
+    color: Colors.dark.textSecondary,
+    marginHorizontal: Spacing.md,
+  },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.dark.backgroundSecondary,
+    borderWidth: 1,
+    borderColor: Colors.dark.border,
+    borderRadius: BorderRadius.xl,
+    height: Spacing.buttonHeight,
+    marginBottom: Spacing.lg,
+    gap: Spacing.sm,
+  },
+  googleButtonText: {
+    ...Typography.button,
+    color: Colors.dark.text,
   },
 });

@@ -1,13 +1,8 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/lib/supabase';
 import { supabaseService } from '@/lib/supabase-service';
-import type { User } from '@/hooks/useAuth';
+import type { User } from '@/types/auth';
 import type { Session } from '@supabase/supabase-js';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import { makeRedirectUri } from 'expo-auth-session';
-
-WebBrowser.maybeCompleteAuthSession();
 
 type AuthContextType = {
   user: User | null;
@@ -38,13 +33,6 @@ export function useAuthState(): AuthContextType {
   const [isLoading, setIsLoading] = useState(true);
   const [hasCompletedOnboarding, setHasCompletedOnboardingState] = useState(false);
 
-  const [googleRequest, googleResponse, promptGoogleAsync] = Google.useAuthRequest({
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-    scopes: ['profile', 'email'],
-  });
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -71,15 +59,6 @@ export function useAuthState(): AuthContextType {
     };
   }, []);
 
-  useEffect(() => {
-    if (googleResponse?.type === 'success') {
-      const { authentication } = googleResponse;
-      if (authentication?.idToken) {
-        handleGoogleSignIn(authentication.idToken);
-      }
-    }
-  }, [googleResponse]);
-
   const loadUserProfile = async (userId: string) => {
     try {
       const profile = await supabaseService.getProfile(userId);
@@ -92,29 +71,6 @@ export function useAuthState(): AuthContextType {
       console.error('Error loading user profile:', error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async (idToken: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      if (data.user) {
-        const existingProfile = await supabaseService.getProfile(data.user.id);
-        if (!existingProfile) {
-          await supabaseService.initializeDefaultAchievements(data.user.id);
-        }
-      }
-    } catch (error: any) {
-      console.error('Error signing in with Google:', error);
-      throw new Error('Falha ao fazer login com Google');
     }
   };
 
@@ -176,12 +132,7 @@ export function useAuthState(): AuthContextType {
   };
 
   const loginWithGoogle = async () => {
-    try {
-      await promptGoogleAsync();
-    } catch (error) {
-      console.error('Error prompting Google sign in:', error);
-      throw new Error('Falha ao iniciar login com Google');
-    }
+    throw new Error('Google Sign-In não configurado. Adicione as credenciais do Google Cloud Console.');
   };
 
   const logout = async () => {
