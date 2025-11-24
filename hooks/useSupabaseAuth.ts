@@ -138,11 +138,12 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
+      const isWeb = typeof window !== 'undefined' && window.location;
+      const redirectUrl = isWeb ? window.location.origin : undefined;
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: window.location.origin,
-        },
+        options: redirectUrl ? { redirectTo: redirectUrl } : undefined,
       });
 
       if (error) {
