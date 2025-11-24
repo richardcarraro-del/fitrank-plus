@@ -38,6 +38,9 @@ export function useAuthState(): AuthContextType {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasCompletedOnboarding, setHasCompletedOnboardingState] = useState(false);
+  
+  // Guard against concurrent loadUserProfile calls
+  const loadingProfileRef = { current: false };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -164,6 +167,14 @@ export function useAuthState(): AuthContextType {
   }, []);
 
   const loadUserProfile = async (userId: string) => {
+    // Prevent concurrent calls
+    if (loadingProfileRef.current) {
+      console.log('[Profile] Already loading profile, skipping duplicate call');
+      return;
+    }
+    
+    loadingProfileRef.current = true;
+    
     try {
       console.log('[Profile] Loading profile for user:', userId);
       let profile = await supabaseService.getProfile(userId);
@@ -222,6 +233,7 @@ export function useAuthState(): AuthContextType {
       console.error('[Profile] Error in loadUserProfile:', error);
     } finally {
       setIsLoading(false);
+      loadingProfileRef.current = false;
     }
   };
 
