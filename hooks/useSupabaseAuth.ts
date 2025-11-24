@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '@/lib/supabase';
@@ -230,9 +231,22 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
-      // Generate redirect URI using Linking.createURL for reliable deep linking
-      // This ensures we get fitrankplus://auth/callback in both Expo Go and production builds
-      const redirectTo = Linking.createURL('auth/callback');
+      // Generate redirect URI with platform-specific logic
+      // Mobile: Use custom deep link scheme (fitrankplus://auth/callback)
+      // Web: Use current origin with callback path
+      let redirectTo: string;
+      
+      if (Platform.OS === 'web') {
+        // On web, use makeRedirectUri to get the correct web origin
+        const { makeRedirectUri } = await import('expo-auth-session');
+        redirectTo = makeRedirectUri({
+          path: 'auth/callback',
+        });
+      } else {
+        // On native (iOS/Android), force custom scheme for deep linking
+        // Must explicitly set scheme to avoid Expo Go inferring the proxy origin
+        redirectTo = Linking.createURL('auth/callback', { scheme: 'fitrankplus' });
+      }
 
       // Get OAuth URL from Supabase using PKCE flow
       const { data, error } = await supabase.auth.signInWithOAuth({
