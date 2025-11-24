@@ -65,12 +65,16 @@ export default function LoginScreen() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
+      console.log('[LoginScreen] Starting Google login...');
       await loginWithGoogle();
+      console.log('[LoginScreen] Google login completed successfully');
     } catch (error: any) {
-      Alert.alert("Erro", error?.message || "Falha ao fazer login com Google");
-    } finally {
-      setLoading(false);
+      console.error('[LoginScreen] Google login error:', error);
+      const errorMessage = error?.message || "Falha ao fazer login com Google";
+      Alert.alert("Erro no Login", errorMessage);
+      setLoading(false); // Only set loading false on error
     }
+    // Note: Don't set loading to false on success - let navigation happen
   };
 
   return (
