@@ -172,7 +172,29 @@ export default function LoginScreen() {
             </LinearGradient>
           </Pressable>
 
-          {/* Google OAuth temporarily disabled - requires OAuth mobile configuration */}
+          {isLogin && (
+            <>
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <ThemedText style={styles.dividerText}>ou</ThemedText>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.googleButton,
+                  pressed && styles.buttonPressed,
+                ]}
+                onPress={handleGoogleSignIn}
+                disabled={loading}
+              >
+                <Feather name="chrome" size={20} color={Colors.dark.text} />
+                <ThemedText style={styles.googleButtonText}>
+                  Continuar com Google
+                </ThemedText>
+              </Pressable>
+            </>
+          )}
 
           <Pressable onPress={() => setIsLogin(!isLogin)}>
             <ThemedText style={styles.switchText}>

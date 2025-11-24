@@ -138,23 +138,33 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-### November 24, 2025 - Post-Signup Navigation Fix
+### November 24, 2025 - Google OAuth Mobile Implementation
 
-**CRITICAL BUG FIX: Signup → Onboarding Navigation**
-- **Problem:** After successful signup, user stayed on login screen instead of navigating to onboarding (ProfileSetupModal), despite auth state changing correctly
-- **Root Cause:** RootNavigator used `initialRouteName` which only applies on first render; subsequent auth state changes didn't trigger navigation
-- **Solution:** Refactored RootNavigator to render **completely different Navigator instances** based on auth state:
-  - No user → Render Navigator with only LoginModal
-  - User without onboarding → Render Navigator with only ProfileSetupModal
-  - User with onboarding → Render Navigator with Main + workout modals
-- This forces React to create a new Navigator when auth state changes, ensuring correct screen is displayed
-- **Files Changed:** `navigation/RootNavigator.tsx`, `hooks/useSupabaseAuth.ts`
-- **Testing:** End-to-end test confirms signup → 6-step onboarding → main screen flow works correctly
+**Google OAuth for Mobile Devices (Expo + Supabase)**
+- **Implemented:** Full Google OAuth flow for iOS/Android using Expo + Supabase with PKCE
+- **Features:**
+  - Deep linking with custom scheme `fitrankplus://auth/callback`
+  - PKCE authorization code flow (primary) with `exchangeCodeForSession()`
+  - Fallback to implicit flow (direct tokens) for compatibility
+  - Automatic profile creation for new Google sign-in users
+  - Proper onboarding navigation after OAuth completion
+- **Technical Details:**
+  - Uses `expo-web-browser` to open OAuth browser session
+  - `expo-linking` for deep link handling and callbacks
+  - `expo-auth-session` for redirect URI generation
+  - Global deep link listener with deduplication guard
+  - Handles both query params and URL fragments (#access_token)
+- **Configuration Required:** User must add redirect URL `fitrankplus://auth/callback` to Supabase Dashboard
+- **Testing:** Requires physical device (Expo Go) or native build for validation
+- **Files Changed:** `hooks/useSupabaseAuth.ts`, `screens/LoginScreen.tsx`
+- **Documentation:** See `GOOGLE_OAUTH_MOBILE_SETUP.md` for complete setup instructions
 
-**Google OAuth Temporarily Disabled**
-- Removed Google sign-in button from LoginScreen (requires mobile OAuth redirect URI configuration)
-- Email/password authentication remains primary auth method
-- To re-enable: Configure Google Cloud Console with proper redirect URLs and mobile deep linking
+**Post-Signup Navigation Fix**
+- **Problem:** After successful signup, user stayed on login screen instead of navigating to onboarding (ProfileSetupModal)
+- **Root Cause:** RootNavigator used `initialRouteName` which only applies on first render
+- **Solution:** Refactored RootNavigator to render **completely different Navigator instances** based on auth state
+- **Result:** Signup → 6-step onboarding → main screen flow works correctly
+- **Files Changed:** `navigation/RootNavigator.tsx`
 
 ### November 2025 - Supabase Migration & Authentication
 

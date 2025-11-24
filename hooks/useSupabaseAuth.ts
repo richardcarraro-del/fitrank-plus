@@ -1,8 +1,13 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '@/lib/supabase';
 import { supabaseService } from '@/lib/supabase-service';
 import type { User } from '@/types/auth';
 import type { Session } from '@supabase/supabase-js';
+
+// Complete auth session for web (must be at module scope)
+WebBrowser.maybeCompleteAuthSession();
 
 type AuthContextType = {
   user: User | null;
@@ -56,6 +61,93 @@ export function useAuthState(): AuthContextType {
 
     return () => {
       subscription.unsubscribe();
+    };
+  }, []);
+
+  // Handle deep links for OAuth callbacks
+  useEffect(() => {
+    let isProcessing = false; // Guard against duplicate processing
+
+    const handleDeepLink = async (url: string) => {
+      if (!url || !url.includes('auth/callback') || isProcessing) return;
+
+      isProcessing = true;
+
+      try {
+        // Parse params from URL (handles both query params and fragments)
+        const QueryParams = await import('expo-auth-session/build/QueryParams');
+        
+        // Try query params first
+        let params = QueryParams.getQueryParams(url).params;
+        
+        // If no params, try fragment
+        if ((!params.code && !params.access_token) && url.includes('#')) {
+          const fragmentUrl = url.replace('#', '?');
+          params = QueryParams.getQueryParams(fragmentUrl).params;
+        }
+
+        const { code, access_token, refresh_token, error: errorParam } = params;
+
+        if (errorParam) {
+          console.error('[Deep Link] Auth error:', errorParam);
+          return;
+        }
+
+        // Handle PKCE flow (authorization code)
+        if (code) {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          
+          if (error) {
+            console.error('[Deep Link] Code exchange error:', error);
+            return;
+          }
+
+          if (data.user) {
+            await loadUserProfile(data.user.id);
+          }
+        }
+        // Handle implicit flow (direct tokens) - fallback
+        else if (access_token && refresh_token) {
+          const { error } = await supabase.auth.setSession({
+            access_token,
+            refresh_token,
+          });
+
+          if (error) {
+            console.error('[Deep Link] Session error:', error);
+          } else {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              await loadUserProfile(user.id);
+            }
+          }
+        }
+        // No code or tokens - log for debugging
+        else {
+          console.warn('[Deep Link] No authorization code or tokens in URL:', url);
+        }
+      } catch (error) {
+        console.error('[Deep Link] Handler error:', error);
+      } finally {
+        // Reset guard after a delay to allow retries if needed
+        setTimeout(() => {
+          isProcessing = false;
+        }, 1000);
+      }
+    };
+
+    // Get initial URL (if app opened via deep link)
+    Linking.getInitialURL().then((url) => {
+      if (url) handleDeepLink(url);
+    });
+
+    // Listen for deep links while app is running
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    return () => {
+      subscription.remove();
     };
   }, []);
 
@@ -138,16 +230,49 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
-      const isWeb = typeof window !== 'undefined' && window.location;
-      const redirectUrl = isWeb ? window.location.origin : undefined;
-      
+      const { makeRedirectUri } = await import('expo-auth-session');
+
+      // Generate redirect URI with custom scheme
+      const redirectTo = makeRedirectUri({
+        scheme: 'fitrankplus',
+        path: 'auth/callback',
+      });
+
+      // Get OAuth URL from Supabase using PKCE flow
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: redirectUrl ? { redirectTo: redirectUrl } : undefined,
+        options: {
+          redirectTo,
+          skipBrowserRedirect: true, // We handle redirect manually
+        },
       });
 
       if (error) {
         throw new Error(error.message);
+      }
+
+      if (!data?.url) {
+        throw new Error('No OAuth URL received from Supabase');
+      }
+
+      // Open browser for OAuth
+      const result = await WebBrowser.openAuthSessionAsync(
+        data.url,
+        redirectTo,
+        { showInRecents: true }
+      );
+
+      // Handle different result types
+      if (result.type === 'success') {
+        // Deep link handler will process the callback (code exchange or tokens)
+        return;
+      } else if (result.type === 'cancel') {
+        throw new Error('Login cancelado pelo usuário');
+      } else if (result.type === 'dismiss') {
+        throw new Error('Login cancelado');
+      } else {
+        console.error('[Google Login] Unexpected result type:', result.type);
+        throw new Error('Falha no login com Google');
       }
     } catch (error: any) {
       console.error('[Google Login] Error:', error);
