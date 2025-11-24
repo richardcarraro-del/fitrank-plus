@@ -138,6 +138,33 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### November 24, 2025 - Google OAuth Stability & Error Handling Improvements
+
+**Supabase Client 406 Error Fix**
+- **Problem:** Supabase client returning 406 (Not Acceptable) errors on profile fetches
+- **Root Cause:** Missing HTTP headers in global Supabase client configuration
+- **Solution:** Added explicit `Accept: application/json` and `Content-Type: application/json` headers to Supabase client global config
+- **Result:** All API calls now work reliably without 406 errors
+- **Files Changed:** `lib/supabase.ts`
+
+**Race Condition Protection for Profile Loading**
+- **Problem:** Concurrent `loadUserProfile` calls during OAuth flow causing duplicate API requests and state conflicts
+- **Root Cause:** Multiple auth state changes triggering simultaneous profile fetch operations
+- **Solution:** Implemented `loadingProfileRef` guard to prevent concurrent profile loading calls
+- **Result:** Profile loading now executes only once per auth state change, eliminating race conditions
+- **Files Changed:** `hooks/useSupabaseAuth.ts`
+
+**Enhanced OAuth Flow Logging**
+- Added comprehensive logging throughout OAuth flow for better debugging
+- Logs cover: LoginScreen initiation, web/mobile platform detection, OAuth URL generation, browser callback handling, profile loading, and navigation decisions
+- Helps diagnose OAuth issues quickly with clear console output
+- **Files Changed:** `screens/LoginScreen.tsx`, `navigation/RootNavigator.tsx`, `hooks/useSupabaseAuth.ts`
+
+**OAuth Flow Validation**
+- Verified complete Google OAuth flow: authentication → automatic profile creation → ProfileSetup redirect → onboarding completion → main app
+- Confirmed expected behavior: After first authorization, Google auto-closes OAuth window (no consent screen on subsequent logins)
+- Tested both web and mobile OAuth paths successfully
+
 ### November 24, 2025 - Google OAuth Mobile Implementation
 
 **Google OAuth for Mobile Devices (Expo + Supabase)**
