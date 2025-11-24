@@ -22,14 +22,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const { user, isLoading, hasCompletedOnboarding } = useAuth();
 
-  console.log('[RootNavigator] Rendering with:', { 
-    user: user?.id, 
-    isLoading, 
-    hasCompletedOnboarding 
-  });
-
   if (isLoading) {
-    console.log('[RootNavigator] Showing loading screen');
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: Colors.dark.backgroundRoot }}>
         <ActivityIndicator size="large" color={Colors.dark.primary} />
@@ -37,29 +30,18 @@ export default function RootNavigator() {
     );
   }
 
-  // Render different stacks based on auth state (dynamic rendering)
-  if (!user) {
-    console.log('[RootNavigator] No user, showing LoginModal');
-    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="LoginModal" component={LoginScreen} />
-      </Stack.Navigator>
-    );
+  // Determine initial route based on auth state
+  let initialRouteName: keyof RootStackParamList = "LoginModal";
+  if (user && !hasCompletedOnboarding) {
+    initialRouteName = "ProfileSetupModal";
+  } else if (user && hasCompletedOnboarding) {
+    initialRouteName = "Main";
   }
-
-  if (!hasCompletedOnboarding) {
-    console.log('[RootNavigator] User without onboarding, showing ProfileSetupModal');
-    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="ProfileSetupModal" component={ProfileSetupScreen} />
-      </Stack.Navigator>
-    );
-  }
-
-  console.log('[RootNavigator] User with onboarding, showing Main');
 
   return (
     <Stack.Navigator
+      key={`${user?.id}-${hasCompletedOnboarding}`}
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
       }}

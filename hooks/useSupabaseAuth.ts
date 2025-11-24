@@ -97,8 +97,6 @@ export function useAuthState(): AuthContextType {
 
   const signup = async (email: string, password: string, name: string) => {
     try {
-      console.log('[Signup] Starting signup process', { email, name });
-      
       if (password.length < 6) {
         throw new Error('A senha deve ter no mínimo 6 caracteres');
       }
@@ -107,7 +105,6 @@ export function useAuthState(): AuthContextType {
         throw new Error('Nome é obrigatório');
       }
 
-      console.log('[Signup] Calling Supabase auth.signUp');
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -119,32 +116,22 @@ export function useAuthState(): AuthContextType {
       });
 
       if (error) {
-        console.error('[Signup] Supabase auth.signUp error:', error);
         if (error.message.includes('already registered')) {
           throw new Error('Este email já está cadastrado');
         }
         throw new Error(error.message);
       }
 
-      console.log('[Signup] Auth user created successfully', data.user?.id);
-
       if (data.user) {
-        console.log('[Signup] Initializing default achievements');
         await supabaseService.initializeDefaultAchievements(data.user.id);
         
-        console.log('[Signup] Loading user profile');
         const profile = await supabaseService.getProfile(data.user.id);
         if (profile) {
-          console.log('[Signup] Profile loaded successfully');
           setUser(profile);
-        } else {
-          console.warn('[Signup] Profile not found after signup');
         }
       }
-      
-      console.log('[Signup] Signup process completed successfully');
     } catch (error) {
-      console.error('[Signup] Signup failed with error:', error);
+      console.error('Signup error:', error);
       throw error;
     }
   };
@@ -184,18 +171,11 @@ export function useAuthState(): AuthContextType {
   };
 
   const setHasCompletedOnboarding = async (value: boolean) => {
-    console.log('[setHasCompletedOnboarding] Called with value:', value, 'user:', user?.id);
     if (!user) {
-      console.log('[setHasCompletedOnboarding] No user, returning');
       return;
     }
-    console.log('[setHasCompletedOnboarding] Setting onboarding in database');
     await supabaseService.setOnboardingComplete(user.id, value);
-    console.log('[setHasCompletedOnboarding] Updating local state');
     setHasCompletedOnboardingState(value);
-    console.log('[setHasCompletedOnboarding] Reloading profile');
-    await loadUserProfile(user.id);
-    console.log('[setHasCompletedOnboarding] Completed');
   };
 
   return {
