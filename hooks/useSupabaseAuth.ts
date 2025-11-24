@@ -242,24 +242,32 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
-      // Generate redirect URI with platform-specific logic
-      // Mobile: Use custom deep link scheme (fitrankplus://auth/callback)
-      // Web: Use current origin with callback path
+      // Generate redirect URI based on platform
+      // Mobile (iOS/Android): Always use custom fitrankplus:// scheme
+      //   - Works in: Development Builds, Standalone Builds
+      //   - Fails in: Expo Go (not supported - user must use Dev Build)
+      // Web: Uses current origin with callback path
+      const { makeRedirectUri } = await import('expo-auth-session');
+      
       console.log('[Google Login] Platform.OS:', Platform.OS);
+      
       let redirectTo: string;
       
       if (Platform.OS === 'web') {
         // On web, use makeRedirectUri to get the correct web origin
-        const { makeRedirectUri } = await import('expo-auth-session');
         redirectTo = makeRedirectUri({
           path: 'auth/callback',
         });
         console.log('[Google Login] Web redirectTo:', redirectTo);
       } else {
-        // On native (iOS/Android), force custom scheme for deep linking
-        // Must explicitly set scheme to avoid Expo Go inferring the proxy origin
-        redirectTo = Linking.createURL('auth/callback', { scheme: 'fitrankplus' });
-        console.log('[Google Login] Native redirectTo:', redirectTo);
+        // On mobile (iOS/Android), always use custom fitrankplus:// scheme
+        // This works in Development Builds and Standalone Builds
+        // Note: Will NOT work in Expo Go (use Development Build instead)
+        redirectTo = makeRedirectUri({
+          native: 'fitrankplus://auth/callback',
+          path: 'auth/callback',
+        });
+        console.log('[Google Login] Mobile redirectTo:', redirectTo);
       }
 
       // Get OAuth URL from Supabase using PKCE flow
