@@ -150,7 +150,21 @@ export function useAuthState(): AuthContextType {
   };
 
   const loginWithGoogle = async () => {
-    throw new Error('Google Sign-In não configurado. Adicione as credenciais do Google Cloud Console.');
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error: any) {
+      console.error('[Google Login] Error:', error);
+      throw error;
+    }
   };
 
   const logout = async () => {
@@ -170,9 +184,18 @@ export function useAuthState(): AuthContextType {
   };
 
   const setHasCompletedOnboarding = async (value: boolean) => {
-    if (!user) return;
+    console.log('[setHasCompletedOnboarding] Called with value:', value, 'user:', user?.id);
+    if (!user) {
+      console.log('[setHasCompletedOnboarding] No user, returning');
+      return;
+    }
+    console.log('[setHasCompletedOnboarding] Setting onboarding in database');
     await supabaseService.setOnboardingComplete(user.id, value);
+    console.log('[setHasCompletedOnboarding] Updating local state');
     setHasCompletedOnboardingState(value);
+    console.log('[setHasCompletedOnboarding] Reloading profile');
+    await loadUserProfile(user.id);
+    console.log('[setHasCompletedOnboarding] Completed');
   };
 
   return {

@@ -70,7 +70,6 @@ export default function ProfileScreen() {
         style: "destructive",
         onPress: async () => {
           await logout();
-          navigation.navigate("LoginModal" as never);
         },
       },
     ]);
@@ -95,7 +94,12 @@ export default function ProfileScreen() {
   };
 
   const handleSelectAcademy = async (academy: Academy) => {
-    await updateProfile({ academy });
+    await updateProfile({ 
+      academy: {
+        id: academy.id,
+        name: academy.name
+      }
+    });
     await loadData();
     setShowAcademyModal(false);
     Alert.alert("Academia atualizada", `Agora você faz parte de ${academy.name}!`);

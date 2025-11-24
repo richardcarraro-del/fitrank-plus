@@ -52,7 +52,6 @@ export default function ProfileSetupScreen() {
     });
     
     await setHasCompletedOnboarding(true);
-    navigation.navigate("Main" as never);
   };
 
   const selectPlan = (

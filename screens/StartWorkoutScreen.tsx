@@ -114,7 +114,7 @@ export default function StartWorkoutScreen() {
     Alert.alert(
       "Parabéns!",
       message,
-      [{ text: "OK", onPress: () => navigation.navigate("Main" as never) }]
+      [{ text: "OK", onPress: () => navigation.goBack() }]
     );
   };
 

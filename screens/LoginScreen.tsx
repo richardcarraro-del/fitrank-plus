@@ -54,12 +54,6 @@ export default function LoginScreen() {
       } else {
         await signup(email, password, name);
       }
-      
-      if (!isLogin) {
-        navigation.navigate("ProfileSetupModal" as never);
-      } else {
-        navigation.navigate("Main" as never);
-      }
     } catch (error: any) {
       const errorMessage = error?.message || "Falha ao autenticar";
       Alert.alert("Erro", errorMessage);
@@ -72,7 +66,6 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await loginWithGoogle();
-      navigation.navigate("Main" as never);
     } catch (error: any) {
       Alert.alert("Erro", error?.message || "Falha ao fazer login com Google");
     } finally {
