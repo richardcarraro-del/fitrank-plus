@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { User } from '@/hooks/useAuth';
+import type { User } from '@/types/auth';
 import type { Workout, UserStats, Achievement, Academy, RankingUser } from '@/utils/storage';
 
 export type SupabaseProfile = {

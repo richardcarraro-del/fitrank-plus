@@ -96,38 +96,56 @@ export function useAuthState(): AuthContextType {
   };
 
   const signup = async (email: string, password: string, name: string) => {
-    if (password.length < 6) {
-      throw new Error('A senha deve ter no mínimo 6 caracteres');
-    }
-
-    if (!name || name.trim().length === 0) {
-      throw new Error('Nome é obrigatório');
-    }
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name: name.trim(),
-        },
-      },
-    });
-
-    if (error) {
-      if (error.message.includes('already registered')) {
-        throw new Error('Este email já está cadastrado');
-      }
-      throw new Error(error.message);
-    }
-
-    if (data.user) {
-      await supabaseService.initializeDefaultAchievements(data.user.id);
+    try {
+      console.log('[Signup] Starting signup process', { email, name });
       
-      const profile = await supabaseService.getProfile(data.user.id);
-      if (profile) {
-        setUser(profile);
+      if (password.length < 6) {
+        throw new Error('A senha deve ter no mínimo 6 caracteres');
       }
+
+      if (!name || name.trim().length === 0) {
+        throw new Error('Nome é obrigatório');
+      }
+
+      console.log('[Signup] Calling Supabase auth.signUp');
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name: name.trim(),
+          },
+        },
+      });
+
+      if (error) {
+        console.error('[Signup] Supabase auth.signUp error:', error);
+        if (error.message.includes('already registered')) {
+          throw new Error('Este email já está cadastrado');
+        }
+        throw new Error(error.message);
+      }
+
+      console.log('[Signup] Auth user created successfully', data.user?.id);
+
+      if (data.user) {
+        console.log('[Signup] Initializing default achievements');
+        await supabaseService.initializeDefaultAchievements(data.user.id);
+        
+        console.log('[Signup] Loading user profile');
+        const profile = await supabaseService.getProfile(data.user.id);
+        if (profile) {
+          console.log('[Signup] Profile loaded successfully');
+          setUser(profile);
+        } else {
+          console.warn('[Signup] Profile not found after signup');
+        }
+      }
+      
+      console.log('[Signup] Signup process completed successfully');
+    } catch (error) {
+      console.error('[Signup] Signup failed with error:', error);
+      throw error;
     }
   };
 
