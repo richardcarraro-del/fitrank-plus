@@ -85,22 +85,22 @@
 
 ### Colors
 **Primary:**
-- Primary: `#4CAF50` (CTAs, active states)
-- Primary Dark: `#388E3C` (pressed)
-- Secondary: `#4ECDC4` (success, secondary actions)
+- Primary: `#00C853` (CTAs, active states)
+- Primary Dark: `#00A844` (pressed)
+- Secondary: `#00E676` (success, secondary actions)
 
 **Neutral:**
-- Background: `#0A0E27` | Surface: `#1A1F3A` | Surface Light: `#252B4A` | Border: `#3A4268`
+- Background: `#000000` | Surface: `#121212` | Surface Light: `#1E1E1E` | Border: `#2A2A2A`
 
 **Text:**
-- Primary: `#FFFFFF` | Secondary: `#A0A8C9` | Tertiary: `#6B7398`
+- Primary: `#FFFFFF` | Secondary: `#9E9E9E` | Tertiary: `#6B6B6B`
 
 **Semantic:**
-- Success: `#4ECDC4` | Warning: `#FFD93D` | Error: `#FF6B6B` | Premium: `#FFD700`
+- Success: `#00E676` | Warning: `#FFD93D` | Error: `#FF5252` | Premium: `#FFD700`
 
 **Gradients:**
-- Primary: `135deg, #4CAF50 → #66BB6A`
-- Dark: `180deg, #0A0E27 → #1A1F3A`
+- Primary: `135deg, #00C853 → #00E676`
+- Dark: `180deg, #000000 → #121212`
 - Premium: `135deg, #FFD700 → #FFA500`
 
 ### Typography
