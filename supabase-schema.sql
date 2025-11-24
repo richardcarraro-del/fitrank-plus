@@ -5,6 +5,19 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =====================================================
+-- ACADEMIES TABLE
+-- Stores gym/academy information
+-- =====================================================
+CREATE TABLE IF NOT EXISTS academies (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT NOT NULL,
+  address TEXT,
+  member_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =====================================================
 -- PROFILES TABLE
 -- Stores user profile data (extends Supabase auth.users)
 -- =====================================================
@@ -26,19 +39,6 @@ CREATE TABLE IF NOT EXISTS profiles (
   is_premium BOOLEAN DEFAULT false,
   selected_plan TEXT CHECK (selected_plan IN ('ABC', 'ABCD', 'FullBody', 'UpperLower')),
   onboarding_complete BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- =====================================================
--- ACADEMIES TABLE
--- Stores gym/academy information
--- =====================================================
-CREATE TABLE IF NOT EXISTS academies (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  name TEXT NOT NULL,
-  address TEXT,
-  member_count INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
