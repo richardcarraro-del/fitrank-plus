@@ -30,18 +30,37 @@ export default function RootNavigator() {
     );
   }
 
-  // Determine initial route based on auth state
-  let initialRouteName: keyof RootStackParamList = "LoginModal";
-  if (user && !hasCompletedOnboarding) {
-    initialRouteName = "ProfileSetupModal";
-  } else if (user && hasCompletedOnboarding) {
-    initialRouteName = "Main";
+  // Render different navigators based on auth state
+  if (!user) {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Group screenOptions={{ presentation: "modal" }}>
+          <Stack.Screen name="LoginModal" component={LoginScreen} />
+        </Stack.Group>
+      </Stack.Navigator>
+    );
+  }
+
+  if (!hasCompletedOnboarding) {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Group screenOptions={{ presentation: "modal" }}>
+          <Stack.Screen name="ProfileSetupModal" component={ProfileSetupScreen} />
+        </Stack.Group>
+      </Stack.Navigator>
+    );
   }
 
   return (
     <Stack.Navigator
-      key={`${user?.id}-${hasCompletedOnboarding}`}
-      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
       }}
@@ -49,8 +68,6 @@ export default function RootNavigator() {
       <Stack.Screen name="Main" component={MainTabNavigator} />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="OnboardingModal" component={OnboardingScreen} />
-        <Stack.Screen name="LoginModal" component={LoginScreen} />
-        <Stack.Screen name="ProfileSetupModal" component={ProfileSetupScreen} />
         <Stack.Screen name="StartWorkoutModal" component={StartWorkoutScreen} />
       </Stack.Group>
     </Stack.Navigator>

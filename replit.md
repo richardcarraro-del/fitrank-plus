@@ -138,7 +138,25 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-### November 2025 - Critical Bug Fixes & Authentication Flow
+### November 24, 2025 - Post-Signup Navigation Fix
+
+**CRITICAL BUG FIX: Signup → Onboarding Navigation**
+- **Problem:** After successful signup, user stayed on login screen instead of navigating to onboarding (ProfileSetupModal), despite auth state changing correctly
+- **Root Cause:** RootNavigator used `initialRouteName` which only applies on first render; subsequent auth state changes didn't trigger navigation
+- **Solution:** Refactored RootNavigator to render **completely different Navigator instances** based on auth state:
+  - No user → Render Navigator with only LoginModal
+  - User without onboarding → Render Navigator with only ProfileSetupModal
+  - User with onboarding → Render Navigator with Main + workout modals
+- This forces React to create a new Navigator when auth state changes, ensuring correct screen is displayed
+- **Files Changed:** `navigation/RootNavigator.tsx`, `hooks/useSupabaseAuth.ts`
+- **Testing:** End-to-end test confirms signup → 6-step onboarding → main screen flow works correctly
+
+**Google OAuth Temporarily Disabled**
+- Removed Google sign-in button from LoginScreen (requires mobile OAuth redirect URI configuration)
+- Email/password authentication remains primary auth method
+- To re-enable: Configure Google Cloud Console with proper redirect URLs and mobile deep linking
+
+### November 2025 - Supabase Migration & Authentication
 
 **Authentication Gating (RootNavigator)**
 - Implemented user authentication verification in RootNavigator
