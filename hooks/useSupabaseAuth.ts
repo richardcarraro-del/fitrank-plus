@@ -70,9 +70,15 @@ export function useAuthState(): AuthContextType {
     let isProcessing = false; // Guard against duplicate processing
 
     const handleDeepLink = async (url: string) => {
-      if (!url || !url.includes('auth/callback') || isProcessing) return;
+      console.log('[Deep Link] Received URL:', url);
+      
+      if (!url || !url.includes('auth/callback') || isProcessing) {
+        console.log('[Deep Link] Skipping:', { hasUrl: !!url, hasCallback: url?.includes('auth/callback'), isProcessing });
+        return;
+      }
 
       isProcessing = true;
+      console.log('[Deep Link] Processing callback...');
 
       try {
         // Parse params from URL (handles both query params and fragments)
@@ -80,11 +86,13 @@ export function useAuthState(): AuthContextType {
         
         // Try query params first
         let params = QueryParams.getQueryParams(url).params;
+        console.log('[Deep Link] Query params:', params);
         
         // If no params, try fragment
         if ((!params.code && !params.access_token) && url.includes('#')) {
           const fragmentUrl = url.replace('#', '?');
           params = QueryParams.getQueryParams(fragmentUrl).params;
+          console.log('[Deep Link] Fragment params:', params);
         }
 
         const { code, access_token, refresh_token, error: errorParam } = params;
@@ -96,6 +104,7 @@ export function useAuthState(): AuthContextType {
 
         // Handle PKCE flow (authorization code)
         if (code) {
+          console.log('[Deep Link] Exchanging code for session...');
           const { data, error } = await supabase.auth.exchangeCodeForSession(code);
           
           if (error) {
@@ -103,12 +112,14 @@ export function useAuthState(): AuthContextType {
             return;
           }
 
+          console.log('[Deep Link] Session established, loading profile...');
           if (data.user) {
             await loadUserProfile(data.user.id);
           }
         }
         // Handle implicit flow (direct tokens) - fallback
         else if (access_token && refresh_token) {
+          console.log('[Deep Link] Setting session with tokens...');
           const { error } = await supabase.auth.setSession({
             access_token,
             refresh_token,
@@ -234,6 +245,7 @@ export function useAuthState(): AuthContextType {
       // Generate redirect URI with platform-specific logic
       // Mobile: Use custom deep link scheme (fitrankplus://auth/callback)
       // Web: Use current origin with callback path
+      console.log('[Google Login] Platform.OS:', Platform.OS);
       let redirectTo: string;
       
       if (Platform.OS === 'web') {
@@ -242,13 +254,16 @@ export function useAuthState(): AuthContextType {
         redirectTo = makeRedirectUri({
           path: 'auth/callback',
         });
+        console.log('[Google Login] Web redirectTo:', redirectTo);
       } else {
         // On native (iOS/Android), force custom scheme for deep linking
         // Must explicitly set scheme to avoid Expo Go inferring the proxy origin
         redirectTo = Linking.createURL('auth/callback', { scheme: 'fitrankplus' });
+        console.log('[Google Login] Native redirectTo:', redirectTo);
       }
 
       // Get OAuth URL from Supabase using PKCE flow
+      console.log('[Google Login] Requesting OAuth URL from Supabase...');
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -258,12 +273,16 @@ export function useAuthState(): AuthContextType {
       });
 
       if (error) {
+        console.error('[Google Login] Supabase error:', error);
         throw new Error(error.message);
       }
 
       if (!data?.url) {
         throw new Error('No OAuth URL received from Supabase');
       }
+
+      console.log('[Google Login] OAuth URL received, opening browser...');
+      console.log('[Google Login] OAuth URL:', data.url);
 
       // Open browser for OAuth
       const result = await WebBrowser.openAuthSessionAsync(
@@ -272,9 +291,12 @@ export function useAuthState(): AuthContextType {
         { showInRecents: true }
       );
 
+      console.log('[Google Login] WebBrowser result:', result);
+
       // Handle different result types
       if (result.type === 'success') {
         // Deep link handler will process the callback (code exchange or tokens)
+        console.log('[Google Login] Success! Deep link handler will process callback');
         return;
       } else if (result.type === 'cancel') {
         throw new Error('Login cancelado pelo usuário');
