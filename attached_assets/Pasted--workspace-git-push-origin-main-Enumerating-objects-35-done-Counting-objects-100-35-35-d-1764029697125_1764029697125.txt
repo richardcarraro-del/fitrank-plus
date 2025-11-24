@@ -1,0 +1,43 @@
+~/workspace$ git push origin main
+Enumerating objects: 35, done.
+Counting objects: 100% (35/35), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (30/30), done.
+Writing objects: 100% (30/30), 933.39 KiB | 28.28 MiB/s, done.
+Total 30 (delta 23), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (23/23), completed with 5 local objects.
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Google OAuth Client ID ————————————————————————————
+remote:        locations:
+remote:          - commit: d530cd86fae229d5114cc11c6ff26bf4a4f33b77
+remote:            path: .replit:101
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/richardcarraro-del/fitrank-plus/security/secret-scanning/unblock-secret/35wCGWqQmNwuN6tiONEjBTK8EZl
+remote:     
+remote:     
+remote:       —— Google OAuth Client Secret ————————————————————————
+remote:        locations:
+remote:          - commit: d530cd86fae229d5114cc11c6ff26bf4a4f33b77
+remote:            path: .replit:102
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/richardcarraro-del/fitrank-plus/security/secret-scanning/unblock-secret/35wCGZ5vGx4FwKwGsJOMDewQuGS
+remote:     
+remote: 
+remote: 
+To https://github.com/richardcarraro-del/fitrank-plus.git
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/richardcarraro-del/fitrank-plus.git'
