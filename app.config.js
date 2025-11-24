@@ -11,6 +11,9 @@ module.exports = {
     extra: {
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      eas: {
+        projectId: "ca78fd8c-e890-43a4-aec8-977ed3cfde09"
+      },
     },
     ios: {
       supportsTablet: true,
