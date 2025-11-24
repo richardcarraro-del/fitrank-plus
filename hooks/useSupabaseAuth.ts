@@ -230,13 +230,9 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
-      const { makeRedirectUri } = await import('expo-auth-session');
-
-      // Generate redirect URI with custom scheme
-      const redirectTo = makeRedirectUri({
-        scheme: 'fitrankplus',
-        path: 'auth/callback',
-      });
+      // Generate redirect URI using Linking.createURL for reliable deep linking
+      // This ensures we get fitrankplus://auth/callback in both Expo Go and production builds
+      const redirectTo = Linking.createURL('auth/callback');
 
       // Get OAuth URL from Supabase using PKCE flow
       const { data, error } = await supabase.auth.signInWithOAuth({
