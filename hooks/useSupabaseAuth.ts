@@ -165,7 +165,9 @@ export function useAuthState(): AuthContextType {
 
   const loadUserProfile = async (userId: string) => {
     try {
+      console.log('[Profile] Loading profile for user:', userId);
       let profile = await supabaseService.getProfile(userId);
+      console.log('[Profile] getProfile result:', profile);
       
       // If profile doesn't exist (e.g., first Google login), create it
       if (!profile) {
@@ -173,6 +175,7 @@ export function useAuthState(): AuthContextType {
         
         // Get user data from Supabase Auth
         const { data: { user: authUser } } = await supabase.auth.getUser();
+        console.log('[Profile] Auth user data:', authUser);
         
         if (authUser) {
           const newProfile: Partial<User> = {
@@ -192,18 +195,31 @@ export function useAuthState(): AuthContextType {
             isPremium: false,
           };
           
-          profile = await supabaseService.createProfile(newProfile);
-          console.log('[Profile] New profile created successfully');
+          console.log('[Profile] Creating profile with data:', newProfile);
+          try {
+            profile = await supabaseService.createProfile(newProfile);
+            console.log('[Profile] New profile created successfully:', profile);
+          } catch (createError) {
+            console.error('[Profile] Error creating profile:', createError);
+            throw createError;
+          }
+        } else {
+          console.error('[Profile] No auth user found, cannot create profile');
         }
+      } else {
+        console.log('[Profile] Profile found, loading onboarding status');
       }
       
       if (profile) {
         setUser(profile);
         const onboardingComplete = await supabaseService.getOnboardingStatus(userId);
         setHasCompletedOnboardingState(onboardingComplete);
+        console.log('[Profile] User profile loaded successfully');
+      } else {
+        console.error('[Profile] Failed to load or create profile');
       }
     } catch (error) {
-      console.error('Error loading user profile:', error);
+      console.error('[Profile] Error in loadUserProfile:', error);
     } finally {
       setIsLoading(false);
     }
