@@ -165,7 +165,38 @@ export function useAuthState(): AuthContextType {
 
   const loadUserProfile = async (userId: string) => {
     try {
-      const profile = await supabaseService.getProfile(userId);
+      let profile = await supabaseService.getProfile(userId);
+      
+      // If profile doesn't exist (e.g., first Google login), create it
+      if (!profile) {
+        console.log('[Profile] Profile not found, creating new profile for user:', userId);
+        
+        // Get user data from Supabase Auth
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        
+        if (authUser) {
+          const newProfile: Partial<User> = {
+            id: userId,
+            name: authUser.user_metadata?.name || authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'Usuário',
+            email: authUser.email || '',
+            avatar: authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '',
+            age: 0,
+            weight: 0,
+            height: 0,
+            goal: 'beginner',
+            level: 'beginner',
+            timeAvailable: 60,
+            weeklyFrequency: 3,
+            location: 'gym',
+            equipment: [],
+            isPremium: false,
+          };
+          
+          profile = await supabaseService.createProfile(newProfile);
+          console.log('[Profile] New profile created successfully');
+        }
+      }
+      
       if (profile) {
         setUser(profile);
         const onboardingComplete = await supabaseService.getOnboardingStatus(userId);
