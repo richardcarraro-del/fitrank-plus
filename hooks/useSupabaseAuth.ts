@@ -263,10 +263,7 @@ export function useAuthState(): AuthContextType {
         // On mobile (iOS/Android), always use custom fitrankplus:// scheme
         // This works in Development Builds and Standalone Builds
         // Note: Will NOT work in Expo Go (use Development Build instead)
-        redirectTo = makeRedirectUri({
-          native: 'fitrankplus://auth/callback',
-          path: 'auth/callback',
-        });
+        redirectTo = 'fitrankplus://auth/callback';
         console.log('[Google Login] Mobile redirectTo:', redirectTo);
       }
 
