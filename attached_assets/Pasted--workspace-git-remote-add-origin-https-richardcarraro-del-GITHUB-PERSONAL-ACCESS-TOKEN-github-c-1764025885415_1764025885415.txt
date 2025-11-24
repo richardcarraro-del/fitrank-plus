@@ -1,0 +1,60 @@
+~/workspace$ git remote add origin https://richardcarraro-del:$GITHUB_PERSONAL_ACCESS_TOKEN@github.com/richardcarraro-del/fitrank-plus.git
+~/workspace$ git push -u origin main
+Enumerating objects: 399, done.
+Counting objects: 100% (399/399), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (386/386), done.
+Writing objects: 100% (399/399), 11.28 MiB | 5.78 MiB/s, done.
+Total 399 (delta 254), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (254/254), done.
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Google OAuth Client ID ————————————————————————————
+remote:        locations:
+remote:          - commit: 6476584814f5286539f33d81670bd7830d3b46b7
+remote:            path: .replit:101
+remote:          - commit: 068d009de9bec7c4767ee0501a0660e52ea60aaf
+remote:            path: .replit:101
+remote:          - commit: b989d357cc80ec491f599fd6e923bb3ae15031e1
+remote:            path: .replit:105
+remote:          - commit: 9118940fff1c2756d639cf24052e8f45d2049179
+remote:            path: .replit:105
+remote:          - commit: 4de084a053b493417aa5db3fcf03c708dc214504
+remote:            path: .replit:105
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/richardcarraro-del/fitrank-plus/security/secret-scanning/unblock-secret/35w4ZrPnq6FX9dNW5wBOVA8ruMP
+remote:     
+remote:     
+remote:       —— Google OAuth Client Secret ————————————————————————
+remote:        locations:
+remote:          - commit: 6476584814f5286539f33d81670bd7830d3b46b7
+remote:            path: .replit:102
+remote:          - commit: 068d009de9bec7c4767ee0501a0660e52ea60aaf
+remote:            path: .replit:102
+remote:          - commit: b989d357cc80ec491f599fd6e923bb3ae15031e1
+remote:            path: .replit:106
+remote:          - commit: 9118940fff1c2756d639cf24052e8f45d2049179
+remote:            path: .replit:106
+remote:          - commit: 4de084a053b493417aa5db3fcf03c708dc214504
+remote:            path: .replit:106
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/richardcarraro-del/fitrank-plus/security/secret-scanning/unblock-secret/35w4ZtEAC5Zads0pmZKzS946FGf
+remote:     
+remote: 
+remote: 
+To https://github.com/richardcarraro-del/fitrank-plus.git
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/richardcarraro-del/fitrank-plus.git'
