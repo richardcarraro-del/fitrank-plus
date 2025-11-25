@@ -77,21 +77,7 @@ export default function ProfileScreen() {
   };
 
   const handleUpgradeToPremium = () => {
-    Alert.alert(
-      "FitRank+ Premium",
-      "Desbloqueie todos os recursos:\n\n• Treinos ilimitados\n• Treinos avançados personalizados\n• Histórico completo de treinos\n• Sem anúncios\n• Suporte prioritário\n\nApenas R$ 29,90/mês",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Assinar Agora",
-          onPress: async () => {
-            await updateProfile({ isPremium: true });
-            await loadData();
-            Alert.alert("Sucesso!", "Você agora é Premium! Aproveite seus treinos ilimitados.");
-          },
-        },
-      ]
-    );
+    (navigation as any).navigate('Premium');
   };
 
   const handleSelectAcademy = async (academy: Academy) => {
