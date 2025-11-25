@@ -13,6 +13,10 @@ localPort = 8082
 externalPort = 3000
 
 [[ports]]
+localPort = 34799
+externalPort = 4200
+
+[[ports]]
 localPort = 36423
 externalPort = 3001
 
@@ -105,3 +109,4 @@ EXPO_PUBLIC_SUPABASE_URL = "https://clwspdnaafuvjdhjhrpn.supabase.co"
 EXPO_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsd3NwZG5hYWZ1dmpkaGpocnBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NDEzMTksImV4cCI6MjA3OTUxNzMxOX0.oeOPYysYYFMmcsmMt8sHiqnEejNtNZ5cJFa48fxXUFg"
 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID = "222196005724-hsduk810apqv8425nbmo4g4p5hffsh7e.apps.googleusercontent.com"
 EXPO_PUBLIC_GOOGLE_CLIENT_SECRET = "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"
+EXPO_PUBLIC_STRIPE_PAYMENT_LINK_URL = "https://buy.stripe.com/6oUfZheFY16i5XigSx3gk00"
