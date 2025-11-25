@@ -1,8 +1,9 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
+import Constants from 'expo-constants';
 import { supabase } from './supabase';
 
-const STRIPE_PAYMENT_LINK = process.env.EXPO_PUBLIC_STRIPE_PAYMENT_LINK_URL || '';
+const STRIPE_PAYMENT_LINK = Constants.expoConfig?.extra?.stripePaymentLink || '';
 
 export async function openStripeCheckout(userId: string, userEmail: string): Promise<{ success: boolean; error?: string }> {
   try {

@@ -11,6 +11,7 @@ module.exports = {
     extra: {
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      stripePaymentLink: "https://buy.stripe.com/6oUfZheFY16i5XigSx3gk00",
       eas: {
         projectId: "ca78fd8c-e890-43a4-aec8-977ed3cfde09"
       },
