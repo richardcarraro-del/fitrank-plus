@@ -22,10 +22,9 @@ module.exports = {
     android: {
       package: "com.fitrankplus.app",
       adaptiveIcon: {
-        backgroundColor: "#0D2818",
+        backgroundColor: "#0A0A0A",
         foregroundImage: "./assets/images/android-icon-foreground.png",
-        backgroundImage: "./assets/images/android-icon-background.png",
-        monochromeImage: "./assets/images/android-icon-monochrome.png",
+        monochromeImage: "./assets/images/android-icon-foreground.png",
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
@@ -41,7 +40,7 @@ module.exports = {
           image: "./assets/images/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: "#0D2818",
+          backgroundColor: "#0A0A0A",
         },
       ],
       "expo-web-browser",
