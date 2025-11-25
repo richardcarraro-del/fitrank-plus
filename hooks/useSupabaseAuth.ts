@@ -300,8 +300,63 @@ export function useAuthState(): AuthContextType {
 
       // Handle different result types
       if (result.type === 'success') {
-        // Deep link handler will process the callback (code exchange or tokens)
-        console.log('[Google Login] Success! Deep link handler will process callback');
+        console.log('[Google Login] Success! Processing callback...');
+        
+        // On web, process the URL directly instead of relying on deep link handler
+        if (Platform.OS === 'web' && result.url) {
+          console.log('[Google Login] Processing web callback URL:', result.url);
+          
+          // Parse tokens from URL
+          const QueryParams = await import('expo-auth-session/build/QueryParams');
+          let params = QueryParams.getQueryParams(result.url).params;
+          
+          // If no params in query, try fragment
+          if ((!params.code && !params.access_token) && result.url.includes('#')) {
+            const fragmentUrl = result.url.replace('#', '?');
+            params = QueryParams.getQueryParams(fragmentUrl).params;
+          }
+          
+          const { code, access_token, refresh_token } = params;
+          
+          // Handle PKCE flow (authorization code)
+          if (code) {
+            console.log('[Google Login] Exchanging code for session...');
+            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+            
+            if (error) {
+              console.error('[Google Login] Code exchange error:', error);
+              throw new Error('Erro ao completar login com Google');
+            }
+            
+            if (data.user) {
+              await loadUserProfile(data.user.id);
+            }
+          }
+          // Handle implicit flow (direct tokens)
+          else if (access_token && refresh_token) {
+            console.log('[Google Login] Setting session with tokens...');
+            const { error } = await supabase.auth.setSession({
+              access_token,
+              refresh_token,
+            });
+            
+            if (error) {
+              console.error('[Google Login] Session error:', error);
+              throw new Error('Erro ao completar login com Google');
+            }
+            
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              await loadUserProfile(user.id);
+            }
+          } else {
+            console.warn('[Google Login] No code or tokens in URL');
+            throw new Error('Erro ao processar autenticação');
+          }
+        } else {
+          // On mobile, deep link handler will process the callback
+          console.log('[Google Login] Mobile: Deep link handler will process callback');
+        }
         return;
       } else if (result.type === 'cancel') {
         throw new Error('Login cancelado pelo usuário');
