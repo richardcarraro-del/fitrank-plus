@@ -22,10 +22,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const { user, isLoading, hasCompletedOnboarding } = useAuth();
 
-  console.log('[RootNavigator] Render state:', { hasUser: !!user, isLoading, hasCompletedOnboarding });
-
   if (isLoading) {
-    console.log('[RootNavigator] Showing loading screen');
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: Colors.dark.backgroundRoot }}>
         <ActivityIndicator size="large" color={Colors.dark.primary} />
@@ -33,10 +30,7 @@ export default function RootNavigator() {
     );
   }
 
-  // Render different navigators based on auth state
   if (!user) {
-    console.log('[RootNavigator] No user, showing login screen');
-
     return (
       <Stack.Navigator
         screenOptions={{
@@ -51,7 +45,6 @@ export default function RootNavigator() {
   }
 
   if (!hasCompletedOnboarding) {
-    console.log('[RootNavigator] User exists but onboarding not complete, showing ProfileSetup');
     return (
       <Stack.Navigator
         screenOptions={{
@@ -65,7 +58,6 @@ export default function RootNavigator() {
     );
   }
 
-  console.log('[RootNavigator] User logged in and onboarding complete, showing Main');
   return (
     <Stack.Navigator
       screenOptions={{

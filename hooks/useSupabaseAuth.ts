@@ -74,63 +74,49 @@ export function useAuthState(): AuthContextType {
     let isProcessing = false; // Guard against duplicate processing
 
     const handleDeepLink = async (url: string) => {
-      console.log('[Deep Link] Received URL:', url);
-      
       if (!url || !url.includes('auth/callback') || isProcessing) {
-        console.log('[Deep Link] Skipping:', { hasUrl: !!url, hasCallback: url?.includes('auth/callback'), isProcessing });
         return;
       }
 
       isProcessing = true;
-      console.log('[Deep Link] Processing callback...');
 
       try {
-        // Parse params from URL (handles both query params and fragments)
         const QueryParams = await import('expo-auth-session/build/QueryParams');
         
-        // Try query params first
         let params = QueryParams.getQueryParams(url).params;
-        console.log('[Deep Link] Query params:', params);
         
-        // If no params, try fragment
         if ((!params.code && !params.access_token) && url.includes('#')) {
           const fragmentUrl = url.replace('#', '?');
           params = QueryParams.getQueryParams(fragmentUrl).params;
-          console.log('[Deep Link] Fragment params:', params);
         }
 
         const { code, access_token, refresh_token, error: errorParam } = params;
 
         if (errorParam) {
-          console.error('[Deep Link] Auth error:', errorParam);
+          console.error('[Auth] Deep link error:', errorParam);
           return;
         }
 
-        // Handle PKCE flow (authorization code)
         if (code) {
-          console.log('[Deep Link] Exchanging code for session...');
           const { data, error } = await supabase.auth.exchangeCodeForSession(code);
           
           if (error) {
-            console.error('[Deep Link] Code exchange error:', error);
+            console.error('[Auth] Code exchange error:', error);
             return;
           }
 
-          console.log('[Deep Link] Session established, loading profile...');
           if (data.user) {
             await loadUserProfile(data.user.id);
           }
         }
-        // Handle implicit flow (direct tokens) - fallback
         else if (access_token && refresh_token) {
-          console.log('[Deep Link] Setting session with tokens...');
           const { error } = await supabase.auth.setSession({
             access_token,
             refresh_token,
           });
 
           if (error) {
-            console.error('[Deep Link] Session error:', error);
+            console.error('[Auth] Session error:', error);
           } else {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
@@ -138,14 +124,9 @@ export function useAuthState(): AuthContextType {
             }
           }
         }
-        // No code or tokens - log for debugging
-        else {
-          console.warn('[Deep Link] No authorization code or tokens in URL:', url);
-        }
       } catch (error) {
-        console.error('[Deep Link] Handler error:', error);
+        console.error('[Auth] Deep link handler error:', error);
       } finally {
-        // Reset guard after a delay to allow retries if needed
         setTimeout(() => {
           isProcessing = false;
         }, 1000);
@@ -168,26 +149,17 @@ export function useAuthState(): AuthContextType {
   }, []);
 
   const loadUserProfile = async (userId: string) => {
-    // Prevent concurrent calls
     if (loadingProfileRef.current) {
-      console.log('[Profile] Already loading profile, skipping duplicate call');
       return;
     }
     
     loadingProfileRef.current = true;
     
     try {
-      console.log('[Profile] Loading profile for user:', userId);
       let profile = await supabaseService.getProfile(userId);
-      console.log('[Profile] getProfile result:', profile);
       
-      // If profile doesn't exist (e.g., first Google login), create it
       if (!profile) {
-        console.log('[Profile] Profile not found, creating new profile for user:', userId);
-        
-        // Get user data from Supabase Auth
         const { data: { user: authUser } } = await supabase.auth.getUser();
-        console.log('[Profile] Auth user data:', authUser);
         
         if (authUser) {
           const newProfile: Partial<User> = {
@@ -207,31 +179,26 @@ export function useAuthState(): AuthContextType {
             isPremium: false,
           };
           
-          console.log('[Profile] Creating profile with data:', newProfile);
           try {
             profile = await supabaseService.createProfile(newProfile);
-            console.log('[Profile] New profile created successfully:', profile);
           } catch (createError) {
-            console.error('[Profile] Error creating profile:', createError);
+            console.error('[Auth] Error creating profile:', createError);
             throw createError;
           }
         } else {
-          console.error('[Profile] No auth user found, cannot create profile');
+          console.error('[Auth] No auth user found');
         }
-      } else {
-        console.log('[Profile] Profile found, loading onboarding status');
       }
       
       if (profile) {
         setUser(profile);
         const onboardingComplete = await supabaseService.getOnboardingStatus(userId);
         setHasCompletedOnboardingState(onboardingComplete);
-        console.log('[Profile] User profile loaded successfully');
       } else {
-        console.error('[Profile] Failed to load or create profile');
+        console.error('[Auth] Failed to load profile');
       }
     } catch (error) {
-      console.error('[Profile] Error in loadUserProfile:', error);
+      console.error('[Auth] Error loading profile:', error);
     } finally {
       setIsLoading(false);
       loadingProfileRef.current = false;
@@ -302,75 +269,46 @@ export function useAuthState(): AuthContextType {
 
   const loginWithGoogle = async () => {
     try {
-      // Generate redirect URI based on platform
-      // Mobile (iOS/Android): Always use custom fitrankplus:// scheme
-      //   - Works in: Development Builds, Standalone Builds
-      //   - Fails in: Expo Go (not supported - user must use Dev Build)
-      // Web: Uses current origin with callback path
       const { makeRedirectUri } = await import('expo-auth-session');
-      
-      console.log('[Google Login] Platform.OS:', Platform.OS);
       
       let redirectTo: string;
       
       if (Platform.OS === 'web') {
-        // On web, use makeRedirectUri to get the correct web origin
         redirectTo = makeRedirectUri({
           path: 'auth/callback',
         });
-        console.log('[Google Login] Web redirectTo:', redirectTo);
       } else {
-        // On mobile (iOS/Android), always use custom fitrankplus:// scheme
-        // This works in Development Builds and Standalone Builds
-        // Note: Will NOT work in Expo Go (use Development Build instead)
         redirectTo = 'fitrankplus://auth/callback';
-        console.log('[Google Login] Mobile redirectTo:', redirectTo);
       }
 
-      // Get OAuth URL from Supabase using PKCE flow
-      console.log('[Google Login] Requesting OAuth URL from Supabase...');
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo,
-          skipBrowserRedirect: true, // We handle redirect manually
+          skipBrowserRedirect: true,
         },
       });
 
       if (error) {
-        console.error('[Google Login] Supabase error:', error);
+        console.error('[Auth] Google OAuth error:', error);
         throw new Error(error.message);
       }
 
       if (!data?.url) {
-        throw new Error('No OAuth URL received from Supabase');
+        throw new Error('No OAuth URL received');
       }
 
-      console.log('[Google Login] OAuth URL received, opening browser...');
-      console.log('[Google Login] OAuth URL:', data.url);
-
-      // Open browser for OAuth
       const result = await WebBrowser.openAuthSessionAsync(
         data.url,
         redirectTo,
         { showInRecents: true }
       );
 
-      console.log('[Google Login] WebBrowser result:', result);
-
-      // Handle different result types
       if (result.type === 'success') {
-        console.log('[Google Login] Success! Processing callback...');
-        
-        // On web, process the URL directly instead of relying on deep link handler
         if (Platform.OS === 'web' && result.url) {
-          console.log('[Google Login] Processing web callback URL:', result.url);
-          
-          // Parse tokens from URL
           const QueryParams = await import('expo-auth-session/build/QueryParams');
           let params = QueryParams.getQueryParams(result.url).params;
           
-          // If no params in query, try fragment
           if ((!params.code && !params.access_token) && result.url.includes('#')) {
             const fragmentUrl = result.url.replace('#', '?');
             params = QueryParams.getQueryParams(fragmentUrl).params;
@@ -378,13 +316,11 @@ export function useAuthState(): AuthContextType {
           
           const { code, access_token, refresh_token } = params;
           
-          // Handle PKCE flow (authorization code)
           if (code) {
-            console.log('[Google Login] Exchanging code for session...');
             const { data, error } = await supabase.auth.exchangeCodeForSession(code);
             
             if (error) {
-              console.error('[Google Login] Code exchange error:', error);
+              console.error('[Auth] Code exchange error:', error);
               throw new Error('Erro ao completar login com Google');
             }
             
@@ -392,16 +328,14 @@ export function useAuthState(): AuthContextType {
               await loadUserProfile(data.user.id);
             }
           }
-          // Handle implicit flow (direct tokens)
           else if (access_token && refresh_token) {
-            console.log('[Google Login] Setting session with tokens...');
             const { error } = await supabase.auth.setSession({
               access_token,
               refresh_token,
             });
             
             if (error) {
-              console.error('[Google Login] Session error:', error);
+              console.error('[Auth] Session error:', error);
               throw new Error('Erro ao completar login com Google');
             }
             
@@ -410,24 +344,17 @@ export function useAuthState(): AuthContextType {
               await loadUserProfile(user.id);
             }
           } else {
-            console.warn('[Google Login] No code or tokens in URL');
             throw new Error('Erro ao processar autenticação');
           }
-        } else {
-          // On mobile, deep link handler will process the callback
-          console.log('[Google Login] Mobile: Deep link handler will process callback');
         }
         return;
-      } else if (result.type === 'cancel') {
+      } else if (result.type === 'cancel' || result.type === 'dismiss') {
         throw new Error('Login cancelado pelo usuário');
-      } else if (result.type === 'dismiss') {
-        throw new Error('Login cancelado');
       } else {
-        console.error('[Google Login] Unexpected result type:', result.type);
         throw new Error('Falha no login com Google');
       }
     } catch (error: any) {
-      console.error('[Google Login] Error:', error);
+      console.error('[Auth] Google login error:', error);
       throw error;
     }
   };
