@@ -165,14 +165,61 @@ export function useAuthState(): AuthContextType {
 
   const loadUserProfile = async (userId: string) => {
     try {
-      const profile = await supabaseService.getProfile(userId);
+      console.log('[Profile] Loading profile for user:', userId);
+      let profile = await supabaseService.getProfile(userId);
+      console.log('[Profile] getProfile result:', profile);
+      
+      // If profile doesn't exist (e.g., first Google login), create it
+      if (!profile) {
+        console.log('[Profile] Profile not found, creating new profile for user:', userId);
+        
+        // Get user data from Supabase Auth
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        console.log('[Profile] Auth user data:', authUser);
+        
+        if (authUser) {
+          const newProfile: Partial<User> = {
+            id: userId,
+            name: authUser.user_metadata?.name || authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'Usuário',
+            email: authUser.email || '',
+            avatar: authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '',
+            age: 0,
+            weight: 0,
+            height: 0,
+            goal: 'beginner',
+            level: 'beginner',
+            timeAvailable: 60,
+            weeklyFrequency: 3,
+            location: 'gym',
+            equipment: [],
+            isPremium: false,
+          };
+          
+          console.log('[Profile] Creating profile with data:', newProfile);
+          try {
+            profile = await supabaseService.createProfile(newProfile);
+            console.log('[Profile] New profile created successfully:', profile);
+          } catch (createError) {
+            console.error('[Profile] Error creating profile:', createError);
+            throw createError;
+          }
+        } else {
+          console.error('[Profile] No auth user found, cannot create profile');
+        }
+      } else {
+        console.log('[Profile] Profile found, loading onboarding status');
+      }
+      
       if (profile) {
         setUser(profile);
         const onboardingComplete = await supabaseService.getOnboardingStatus(userId);
         setHasCompletedOnboardingState(onboardingComplete);
+        console.log('[Profile] User profile loaded successfully');
+      } else {
+        console.error('[Profile] Failed to load or create profile');
       }
     } catch (error) {
-      console.error('Error loading user profile:', error);
+      console.error('[Profile] Error in loadUserProfile:', error);
     } finally {
       setIsLoading(false);
     }

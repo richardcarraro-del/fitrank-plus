@@ -90,6 +90,32 @@ export const supabaseService = {
     return data ? profileToUser(data as SupabaseProfile) : null;
   },
 
+  async createProfile(profile: Partial<User>): Promise<User | null> {
+    const snakeProfile = camelToSnake(profile);
+    
+    // Set default values
+    const profileData = {
+      ...snakeProfile,
+      is_premium: false,
+      onboarding_complete: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert(profileData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating profile:', error);
+      throw new Error('Falha ao criar perfil');
+    }
+
+    return data ? profileToUser(data as SupabaseProfile) : null;
+  },
+
   async updateProfile(userId: string, updates: Partial<User>): Promise<User | null> {
     const snakeUpdates = camelToSnake(updates);
     

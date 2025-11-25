@@ -1,0 +1,30 @@
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+ 
+ POST https://clwspdnaafuvjdhjhrpn.supabase.co/auth/v1/token?grant_type=refresh_token 429 (Too Many Requests)
+ 
+ GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+ Error fetching profile: 
+{code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}

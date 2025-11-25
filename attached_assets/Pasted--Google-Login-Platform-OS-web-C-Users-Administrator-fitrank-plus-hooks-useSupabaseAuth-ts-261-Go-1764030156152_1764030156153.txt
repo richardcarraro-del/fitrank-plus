@@ -1,0 +1,489 @@
+[Google Login] Platform.OS: web
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:261 [Google Login] Web redirectTo: http://localhost:8081/auth/callback
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:271 [Google Login] Requesting OAuth URL from Supabase...
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:289 [Google Login] OAuth URL received, opening browser...
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:290 [Google Login] OAuth URL: https://clwspdnaafuvjdhjhrpn.supabase.co/auth/v1/authorize?provider=google&redirect_to=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fcallback
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:73 [Deep Link] Received URL: http://localhost:8081/
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:76 [Deep Link] Skipping: {hasUrl: true, hasCallback: false, isProcessing: false}
+ Cross-Origin-Opener-Policy policy would block the window.close call.
+dismissPopup @ C:\Users\Administrator\fitrank-plus\node_modules\expo-web-browser\build\ExpoWebBrowser.web.js:19
+postMessage
+maybeCompleteAuthSession @ index.bundle?platfor….routerRoot…:157109
+maybeCompleteAuthSession @ index.bundle?platfor….routerRoot…:156681
+__d.0 @ index.bundle?platfor….routerRoot…:155572
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:154096
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:153975
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:124542
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:118639
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor…m.routerRoot…:26729
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor…rm.routerRoot…:1278
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:159
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:193648Understand this error
+ Cross-Origin-Opener-Policy policy would block the window.close call.
+dismissPopup @ C:\Users\Administrator\fitrank-plus\node_modules\expo-web-browser\build\ExpoWebBrowser.web.js:19
+postMessage
+maybeCompleteAuthSession @ index.bundle?platfor….routerRoot…:157109
+maybeCompleteAuthSession @ index.bundle?platfor….routerRoot…:156681
+__d.0 @ index.bundle?platfor….routerRoot…:155572
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:154096
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:153975
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:124542
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:118639
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor…m.routerRoot…:26729
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:166
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor…rm.routerRoot…:1278
+loadModuleImplementation @ index.bundle?platfor…orm.routerRoot…:254
+guardedLoadModule @ index.bundle?platfor…orm.routerRoot…:159
+metroRequire @ index.bundle?platfor…form.routerRoot…:79
+(anonymous) @ index.bundle?platfor….routerRoot…:193648Understand this error
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:299 [Google Login] WebBrowser result: {type: 'success', url: 'http://localhost:8081/auth/callback#access_token=e…0289&refresh_token=edwzuhkgdhld&token_type=bearer'}
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:303 [Google Login] Success! Processing callback...
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:307 [Google Login] Processing web callback URL: http://localhost:8081/auth/callback#access_token=eyJhbGciOiJIUzI1NiIsImtpZCI6IkpNUHdPSTlub2NINUZsdUQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2Nsd3NwZG5hYWZ1dmpkaGpocnBuLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIyNjA0M2IxYi1kOWI5LTQ4YzUtODMzNS1kNjRlZDVhNWU3MDIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY0MDE1NzM5LCJpYXQiOjE3NjQwMTIxMzksImVtYWlsIjoicmljaGFyZGNhcnJhcm9AZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJnb29nbGUiLCJwcm92aWRlcnMiOlsiZ29vZ2xlIl19LCJ1c2VyX21ldGFkYXRhIjp7ImF2YXRhcl91cmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKUUotRUNKTGNiemxXRElzRDFxS0k1SEtkSThOSm9KemJFS21fRDdnM0g5UnlORFFNZz1zOTYtYyIsImVtYWlsIjoicmljaGFyZGNhcnJhcm9AZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6InJpY2hhcmQgY2FycmFybyIsImlzcyI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbSIsIm5hbWUiOiJyaWNoYXJkIGNhcnJhcm8iLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKUUotRUNKTGNiemxXRElzRDFxS0k1SEtkSThOSm9KemJFS21fRDdnM0g5UnlORFFNZz1zOTYtYyIsInByb3ZpZGVyX2lkIjoiMTA3MDk0NjA5OTA5Mjk5NTM3OTE1Iiwic3ViIjoiMTA3MDk0NjA5OTA5Mjk5NTM3OTE1In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE3NjQwMTIxMzl9XSwic2Vzc2lvbl9pZCI6IjgxNzlmZTM0LWVjZjYtNDUyZS04YTI5LTk0MjRmMDdlMDliOSIsImlzX2Fub255bW91cyI6ZmFsc2V9.ZHHstQlwPGqsJphtT5ER-MXrJ0VlNNL6WJ595AnoPOQ&expires_at=1764015739&expires_in=3600&provider_token=ya29.A0ATi6K2tKd8cbXvogr_7c7GVBf92ScS9l8Imy_0YruiiusaKgqEwx05CR0QyHGjfHQmgSpfK3W4LktUq3GTVtH3Dm8819w4BheWWKe0I3roXlmhHv2TWfDul_Ioi0Vo0iPpKGhPzBRb4FLJ23qiv5KEh6kANiRGFiaOU01OTMEE4HBF3cmBu133gygLti6yyKQUuJfv_7uI1jCb3AoKAeRo-PHNfbR1ptdTbuyzxpeSs2wAqZzPAyazfYbnUCll6XJBAPDBBd5wqVZ81V9My4mBsGTgaCgYKAcgSARQSFQHGX2MiPApa75K5ToKxX0XKbXbQbg0289&refresh_token=edwzuhkgdhld&token_type=bearer
+C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:337 [Google Login] Setting session with tokens...
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+_setSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1356
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1338
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1111
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\locks.js:126Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\helpers.js:90  POST https://clwspdnaafuvjdhjhrpn.supabase.co/auth/v1/token?grant_type=refresh_token 429 (Too Many Requests)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\helpers.js:90
+_handleRequest @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\fetch.js:91
+_request @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\fetch.js:81
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1791
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\helpers.js:180
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\helpers.js:193
+retryable @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\lib\helpers.js:174
+_refreshAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1786
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1944
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
+getProfile @ C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86
+await in getProfile
+loadUserProfile @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:168
+(anonymous) @ C:\Users\Administrator\fitrank-plus\hooks\useSupabaseAuth.ts:55
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1983
+_notifyAllSubscribers @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1981
+_callRefreshToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1950
+await in _callRefreshToken
+__loadSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1215
+await in __loadSession
+_useSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1149
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1077
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1095
+await in (anonymous)
+_acquireLock @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1096
+getSession @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\auth-js\dist\module\GoTrueClient.js:1076
+await in getSession
+_getAccessToken @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\SupabaseClient.js:182
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:15
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5  GET https://clwspdnaafuvjdhjhrpn.supabase.co/rest/v1/profiles?select=*&id=eq.26043b1b-d9b9-48c5-8335-d64ed5a5e702 406 (Not Acceptable)
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:5
+(anonymous) @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\supabase-js\dist\module\lib\fetch.js:23
+await in (anonymous)
+then @ C:\Users\Administrator\fitrank-plus\node_modules\@supabase\postgrest-js\dist\cjs\PostgrestBuilder.js:72Understand this error
+C:\Users\Administrator\fitrank-plus\lib\supabase-service.ts:86 Error fetching profile: {code: 'PGRST116', details: 'The result contains 0 rows', hint: null, message: 'Cannot coerce the result to a single JSON object'}
