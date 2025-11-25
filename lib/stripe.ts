@@ -4,13 +4,10 @@ import { supabase } from './supabase';
 
 const STRIPE_PAYMENT_LINK = Constants.expoConfig?.extra?.stripePaymentLink || '';
 
-export async function openStripeCheckout(userId: string, userEmail: string): Promise<{ success: boolean; error?: string; pending?: boolean }> {
+export async function openStripeCheckout(userId: string, userEmail: string): Promise<{ error?: string }> {
   try {
     if (!STRIPE_PAYMENT_LINK) {
-      return { 
-        success: false, 
-        error: 'Link de pagamento nao configurado.' 
-      };
+      return { error: 'Link de pagamento nao configurado.' };
     }
     
     const checkoutUrl = new URL(STRIPE_PAYMENT_LINK);
@@ -19,10 +16,10 @@ export async function openStripeCheckout(userId: string, userEmail: string): Pro
     
     await WebBrowser.openBrowserAsync(checkoutUrl.toString());
     
-    return { success: false, pending: true };
+    return {};
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return { success: false, error: 'Erro ao abrir checkout' };
+    return { error: 'Erro ao abrir checkout' };
   }
 }
 

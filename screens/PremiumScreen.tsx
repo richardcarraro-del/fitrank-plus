@@ -32,12 +32,15 @@ export default function PremiumScreen() {
     }, [user?.id])
   );
 
-  const refreshPremiumStatus = async () => {
-    if (!user?.id) return;
+  const refreshPremiumStatus = async (useRetry: boolean = false): Promise<boolean> => {
+    if (!user?.id) return false;
     
     setIsCheckingStatus(true);
     try {
-      const isPremium = await checkPremiumStatus(user.id);
+      const isPremium = useRetry 
+        ? await checkPremiumStatusWithRetry(user.id, 5, 2000)
+        : await checkPremiumStatus(user.id);
+        
       if (isPremium && !user.isPremium) {
         await refreshProfile();
         Alert.alert(
@@ -45,9 +48,12 @@ export default function PremiumScreen() {
           'Sua assinatura Premium foi ativada com sucesso!',
           [{ text: 'OK', onPress: () => navigation.goBack() }]
         );
+        return true;
       }
+      return isPremium;
     } catch (error) {
       console.error('Error refreshing premium status:', error);
+      return false;
     } finally {
       setIsCheckingStatus(false);
     }
@@ -66,25 +72,17 @@ export default function PremiumScreen() {
       
       if (result.error) {
         Alert.alert('Aviso', result.error);
-      } else if (result.pending) {
-        setIsCheckingStatus(true);
-        const isPremium = await checkPremiumStatusWithRetry(user.id, 5, 2000);
-        setIsCheckingStatus(false);
-        
-        if (isPremium) {
-          await refreshProfile();
-          Alert.alert(
-            'Parabens!',
-            'Sua assinatura Premium foi ativada com sucesso!',
-            [{ text: 'OK', onPress: () => navigation.goBack() }]
-          );
-        } else {
-          Alert.alert(
-            'Verificando pagamento',
-            'Se voce completou o pagamento, clique em "Restaurar Compras" para ativar seu Premium. O processamento pode levar alguns segundos.',
-            [{ text: 'OK' }]
-          );
-        }
+        return;
+      }
+      
+      const premiumActivated = await refreshPremiumStatus(true);
+      
+      if (!premiumActivated) {
+        Alert.alert(
+          'Verificando pagamento',
+          'Se voce completou o pagamento, clique em "Restaurar Compras" para ativar seu Premium. O processamento pode levar alguns segundos.',
+          [{ text: 'OK' }]
+        );
       }
     } catch (error) {
       console.error('Subscription error:', error);
