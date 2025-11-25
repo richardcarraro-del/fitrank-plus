@@ -13,7 +13,7 @@ const TEST_IDS: AdConfig = {
 };
 
 const PRODUCTION_IDS: AdConfig = {
-  appId: process.env.EXPO_PUBLIC_ADMOB_APP_ID || TEST_IDS.appId,
+  appId: 'ca-app-pub-1302202797555633~6096137070',
   bannerId: process.env.EXPO_PUBLIC_ADMOB_BANNER_ID || TEST_IDS.bannerId,
   interstitialId: process.env.EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID || TEST_IDS.interstitialId,
 };
