@@ -886,18 +886,19 @@ const styles = StyleSheet.create({
   achievementsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: Spacing.md,
+    justifyContent: "space-between",
     marginBottom: Spacing.lg,
   },
   achievementCard: {
-    width: "48%",
+    width: "47%",
+    marginBottom: Spacing.md,
     backgroundColor: Colors.dark.backgroundDefault,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     borderRadius: BorderRadius.lg,
     borderWidth: 2,
     borderColor: Colors.dark.premium,
     alignItems: "center",
-    gap: Spacing.sm,
+    gap: Spacing.xs,
   },
   achievementLocked: {
     borderColor: Colors.dark.border,
