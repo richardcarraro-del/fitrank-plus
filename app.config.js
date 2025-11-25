@@ -9,8 +9,8 @@ module.exports = {
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     extra: {
-      supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
-      supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: "https://clwspdnaafuvjdhjhrpn.supabase.co",
+      supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsd3NwZG5hYWZ1dmpkaGpocnBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NDEzMTksImV4cCI6MjA3OTUxNzMxOX0.oeOPYysYYFMmcsmMt8sHiqnEejNtNZ5cJFa48fxXUFg",
       stripePaymentLink: "https://buy.stripe.com/6oUfZheFY16i5XigSx3gk00",
       eas: {
         projectId: "ca78fd8c-e890-43a4-aec8-977ed3cfde09"
