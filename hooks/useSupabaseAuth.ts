@@ -19,6 +19,7 @@ type AuthContextType = {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
+  refreshProfile: () => Promise<void>;
   hasCompletedOnboarding: boolean;
   setHasCompletedOnboarding: (value: boolean) => Promise<void>;
 };
@@ -455,6 +456,12 @@ export function useAuthState(): AuthContextType {
     setHasCompletedOnboardingState(value);
   };
 
+  const refreshProfile = async () => {
+    if (session?.user?.id) {
+      await loadUserProfile(session.user.id);
+    }
+  };
+
   return {
     user,
     isLoading,
@@ -464,6 +471,7 @@ export function useAuthState(): AuthContextType {
     loginWithGoogle,
     logout,
     updateProfile,
+    refreshProfile,
     hasCompletedOnboarding,
     setHasCompletedOnboarding,
   };

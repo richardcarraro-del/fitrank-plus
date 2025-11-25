@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { ScreenScrollView } from '@/components/ScreenScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -6,7 +6,8 @@ import { Colors, Spacing, BorderRadius, Typography } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '@/hooks/useSupabaseAuth';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { openStripeCheckout, checkPremiumStatus } from '@/lib/stripe';
 
 const PREMIUM_FEATURES = [
   { icon: 'repeat' as const, title: 'Treinos Ilimitados', description: 'Gere quantos treinos quiser, sem limites' },
@@ -18,26 +19,58 @@ const PREMIUM_FEATURES = [
 ];
 
 export default function PremiumScreen() {
-  const { user, updateProfile } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.id) {
+        refreshPremiumStatus();
+      }
+    }, [user?.id])
+  );
+
+  const refreshPremiumStatus = async () => {
+    if (!user?.id) return;
+    
+    setIsCheckingStatus(true);
+    try {
+      const isPremium = await checkPremiumStatus(user.id);
+      if (isPremium && !user.isPremium) {
+        await refreshProfile();
+        Alert.alert(
+          'Parabens!',
+          'Sua assinatura Premium foi ativada com sucesso!',
+          [{ text: 'OK', onPress: () => navigation.goBack() }]
+        );
+      }
+    } catch (error) {
+      console.error('Error refreshing premium status:', error);
+    } finally {
+      setIsCheckingStatus(false);
+    }
+  };
 
   const handleSubscribe = async () => {
+    if (!user?.id || !user?.email) {
+      Alert.alert('Erro', 'Voce precisa estar logado para assinar.');
+      return;
+    }
+
     setIsLoading(true);
     
     try {
-      await updateProfile({ isPremium: true });
+      const result = await openStripeCheckout(user.id, user.email);
       
-      Alert.alert(
-        'Parabens!',
-        'Voce agora e um membro Premium! Aproveite todos os beneficios.',
-        [
-          {
-            text: 'Comecar',
-            onPress: () => navigation.goBack(),
-          },
-        ]
-      );
+      if (result.success) {
+        await refreshPremiumStatus();
+      } else if (result.error) {
+        if (result.error !== 'Pagamento cancelado') {
+          Alert.alert('Aviso', result.error);
+        }
+      }
     } catch (error) {
       console.error('Subscription error:', error);
       Alert.alert('Erro', 'Nao foi possivel processar sua assinatura. Tente novamente.');
@@ -47,7 +80,25 @@ export default function PremiumScreen() {
   };
 
   const handleRestorePurchases = async () => {
-    Alert.alert('Restaurar Compras', 'Verificando suas compras anteriores...');
+    if (!user?.id) {
+      Alert.alert('Erro', 'Voce precisa estar logado.');
+      return;
+    }
+
+    setIsCheckingStatus(true);
+    try {
+      const isPremium = await checkPremiumStatus(user.id);
+      if (isPremium) {
+        await refreshProfile();
+        Alert.alert('Sucesso', 'Sua assinatura Premium foi restaurada!');
+      } else {
+        Alert.alert('Nenhuma assinatura', 'Nao encontramos uma assinatura ativa para sua conta.');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Nao foi possivel verificar sua assinatura.');
+    } finally {
+      setIsCheckingStatus(false);
+    }
   };
 
   if (user?.isPremium) {
