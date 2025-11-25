@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useSupabaseAuth";
 import { Colors, Spacing, BorderRadius, Typography } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { storage, UserStats, Academy, Achievement } from "@/utils/storage";
 import { selectPlanBasedOnFrequency } from "@/utils/workoutGenerator";
@@ -180,11 +181,32 @@ export default function ProfileScreen() {
     );
   }
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const isImageUrl = (avatar?: string) => {
+    return avatar && (avatar.startsWith('http://') || avatar.startsWith('https://'));
+  };
+
   return (
     <ScreenScrollView contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
-          <ThemedText style={styles.avatar}>{user.avatar}</ThemedText>
+          {isImageUrl(user.avatar) ? (
+            <Image
+              source={{ uri: user.avatar }}
+              style={styles.avatarImage}
+              contentFit="cover"
+            />
+          ) : (
+            <ThemedText style={styles.avatar}>{getInitials(user.name)}</ThemedText>
+          )}
         </View>
         <ThemedText style={styles.name}>{user.name}</ThemedText>
         <ThemedText style={styles.details}>
@@ -672,6 +694,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: Spacing.md,
+    overflow: "hidden",
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
   },
   avatar: {
     ...Typography.h1,
