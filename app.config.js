@@ -44,13 +44,6 @@ module.exports = {
         },
       ],
       "expo-web-browser",
-      [
-        "react-native-google-mobile-ads",
-        {
-          androidAppId: "ca-app-pub-1302202797555633~6096137070",
-          iosAppId: "ca-app-pub-1302202797555633~6096137070",
-        },
-      ],
     ],
     experiments: {
       reactCompiler: true,
