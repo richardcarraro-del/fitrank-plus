@@ -14,8 +14,8 @@ const TEST_IDS: AdConfig = {
 
 const PRODUCTION_IDS: AdConfig = {
   appId: 'ca-app-pub-1302202797555633~6096137070',
-  bannerId: process.env.EXPO_PUBLIC_ADMOB_BANNER_ID || TEST_IDS.bannerId,
-  interstitialId: process.env.EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID || TEST_IDS.interstitialId,
+  bannerId: 'ca-app-pub-1302202797555633/4926649346',
+  interstitialId: 'ca-app-pub-1302202797555633/9328928782',
 };
 
 export const getAdConfig = (): AdConfig => {
