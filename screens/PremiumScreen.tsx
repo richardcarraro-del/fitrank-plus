@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '@/hooks/useSupabaseAuth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { openStripeCheckout, checkPremiumStatus } from '@/lib/stripe';
+import { openStripeCheckout, checkPremiumStatus, checkPremiumStatusWithRetry } from '@/lib/stripe';
 
 const PREMIUM_FEATURES = [
   { icon: 'repeat' as const, title: 'Treinos Ilimitados', description: 'Gere quantos treinos quiser, sem limites' },
@@ -64,11 +64,26 @@ export default function PremiumScreen() {
     try {
       const result = await openStripeCheckout(user.id, user.email);
       
-      if (result.success) {
-        await refreshPremiumStatus();
-      } else if (result.error) {
-        if (result.error !== 'Pagamento cancelado') {
-          Alert.alert('Aviso', result.error);
+      if (result.error) {
+        Alert.alert('Aviso', result.error);
+      } else if (result.pending) {
+        setIsCheckingStatus(true);
+        const isPremium = await checkPremiumStatusWithRetry(user.id, 5, 2000);
+        setIsCheckingStatus(false);
+        
+        if (isPremium) {
+          await refreshProfile();
+          Alert.alert(
+            'Parabens!',
+            'Sua assinatura Premium foi ativada com sucesso!',
+            [{ text: 'OK', onPress: () => navigation.goBack() }]
+          );
+        } else {
+          Alert.alert(
+            'Verificando pagamento',
+            'Se voce completou o pagamento, clique em "Restaurar Compras" para ativar seu Premium. O processamento pode levar alguns segundos.',
+            [{ text: 'OK' }]
+          );
         }
       }
     } catch (error) {
