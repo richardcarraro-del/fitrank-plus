@@ -11,6 +11,7 @@ import type { NavigationProp } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { generateWorkout } from "@/utils/workoutGenerator";
 import type { RootStackParamList } from "@/navigation/RootNavigator";
+import { AdBanner } from "@/components/AdBanner";
 
 export default function WorkoutScreen() {
   const { user } = useAuth();
@@ -146,6 +147,8 @@ export default function WorkoutScreen() {
           ))}
         </View>
       )}
+
+      <AdBanner style={styles.adBanner} />
     </ScreenScrollView>
   );
 }
@@ -426,5 +429,9 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     borderTopWidth: 1,
     borderTopColor: Colors.dark.border,
+  },
+  adBanner: {
+    marginTop: Spacing.lg,
+    marginBottom: Spacing.xl,
   },
 });

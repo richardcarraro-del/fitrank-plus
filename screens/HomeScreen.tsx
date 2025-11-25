@@ -9,6 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { generateWorkout } from "@/utils/workoutGenerator";
+import { AdBanner } from "@/components/AdBanner";
 
 type HomeStats = Pick<UserStats, 'currentStreak' | 'totalWorkouts' | 'totalPoints' | 'weeklyPoints'>;
 
@@ -178,6 +179,8 @@ export default function HomeScreen() {
         <Feather name="list" size={18} color={Colors.dark.primary} style={{ marginRight: Spacing.sm }} />
         <ThemedText style={styles.secondaryButtonText}>Ver Histórico de Treinos</ThemedText>
       </Pressable>
+
+      <AdBanner style={styles.adBanner} />
     </ScreenScrollView>
   );
 }
@@ -421,5 +424,8 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     ...Typography.button,
     color: Colors.dark.primary,
+  },
+  adBanner: {
+    marginBottom: Spacing.xl,
   },
 });
