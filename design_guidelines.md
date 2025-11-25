@@ -90,17 +90,17 @@
 - Secondary: `#00E676` (success, secondary actions)
 
 **Neutral:**
-- Background: `#000000` | Surface: `#121212` | Surface Light: `#1E1E1E` | Border: `#2A2A2A`
+- Background: `#0A0A0A` | Surface: `#161616` | Surface Light: `#202020` | Border: `#2C2C2C`
 
 **Text:**
-- Primary: `#FFFFFF` | Secondary: `#9E9E9E` | Tertiary: `#6B6B6B`
+- Primary: `#FFFFFF` | Secondary: `#A0A0A0` | Tertiary: `#707070`
 
 **Semantic:**
 - Success: `#00E676` | Warning: `#FFD93D` | Error: `#FF5252` | Premium: `#FFD700`
 
 **Gradients:**
 - Primary: `135deg, #00C853 → #00E676`
-- Dark: `180deg, #000000 → #121212`
+- Dark: `180deg, #0A0A0A → #161616`
 - Premium: `135deg, #FFD700 → #FFA500`
 
 ### Typography

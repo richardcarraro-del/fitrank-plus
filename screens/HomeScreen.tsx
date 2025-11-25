@@ -68,7 +68,7 @@ export default function HomeScreen() {
     <ScreenScrollView contentContainerStyle={styles.content}>
       <View style={styles.streakCard}>
         <LinearGradient
-          colors={stats.currentStreak >= 7 ? ["#4CAF50", "#66BB6A"] : [Colors.dark.backgroundSecondary, Colors.dark.backgroundSecondary]}
+          colors={stats.currentStreak >= 7 ? ["#00C853", "#00E676"] : [Colors.dark.backgroundSecondary, Colors.dark.backgroundSecondary]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.streakGradient}
@@ -133,7 +133,7 @@ export default function HomeScreen() {
             onPress={handleStartWorkout}
           >
             <LinearGradient
-              colors={["#4CAF50", "#66BB6A"]}
+              colors={["#00C853", "#00E676"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.buttonGradient}
